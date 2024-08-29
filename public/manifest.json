@@ -1,0 +1,20 @@
+{
+  "name": "PMC",
+  "short_name": "PMC",
+  "display": "standalone",
+  "start_url": "/",
+  "theme_color": "#000000",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "favicon/pmc 192px-01.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon/pmc 192px-01.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
