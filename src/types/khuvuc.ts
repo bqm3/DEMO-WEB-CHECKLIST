@@ -226,7 +226,8 @@ export type ITbChecklist = {
   ID_KhoiCV: string;
   Ngay: string;
   ID_Calv: string;
-  ID_Giamsat: string;
+  ID_User: string;
+  ID_ThietLapCa: string;
   TongC: string;
   Tong: string;
   Giobd: string;
@@ -244,6 +245,8 @@ export type ITbChecklist = {
   ent_khoicv: IKhoiCV;
   ent_giamsat: IGiamsat;
   ent_calv: ICalv;
+  ent_user: IUser;
+  ent_thietlapca: IThietLapCa
 };
 
 export type IChecklist = {

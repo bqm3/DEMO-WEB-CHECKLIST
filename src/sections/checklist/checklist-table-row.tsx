@@ -35,6 +35,7 @@ type Props = {
   onSelectRow: VoidFunction;
   onDeleteRow: VoidFunction;
   khoiCV: IKhoiCV[];
+  index: number;
 };
 
 export default function AreaTableRow({
@@ -45,6 +46,7 @@ export default function AreaTableRow({
   onDeleteRow,
   calv,
   khoiCV,
+  index
 }: Props) {
   const {
     ID_Checklist,
@@ -75,62 +77,6 @@ export default function AreaTableRow({
 
   const popover = usePopover();
 
-  const sCalvNew = `${sCalv}`;
-  let arrNew : any[] = [];
-
-  // Kiểm tra nếu sCalv là chuỗi
-  if (typeof sCalvNew === 'string') {
-    try {
-      const array = sCalvNew.split(',').map((item) => parseInt(item.trim(), 10));
-
-      // Kiểm tra nếu kết quả là mảng
-      if (Array.isArray(array)) {
-        arrNew = array;
-      } else {
-        console.error('Parsed result is not an array:', array);
-      }
-    } catch (error) {
-      // Xử lý lỗi phân tích JSON
-      console.error('Error parsing JSON:', error);
-    }
-  } else {
-    console.log('sCalv is not a string:', typeof sCalv);
-  }
-
-  const shiftNames = arrNew
-    ?.map((calvId) => {
-      // Tìm ca làm việc trong sCalv bằng ID_Calv
-      const workShift = calv?.find((shift) => `${shift.ID_Calv}` === `${calvId}`);
-      // Nếu tìm thấy, trả về tên của ca làm việc
-      return workShift ? workShift.Tenca : null;
-    })
-    // Lọc ra các phần tử null trong trường hợp ID_Calv không tồn tại trong sCalv
-    .filter((name) => name !== null);
-
-  // Tạo các nhãn từ mảng các tên ca làm việc
-  const labels = shiftNames.map((name, index) => (
-    <Label key={index} variant="soft" color="info" style={{ marginTop: 2 }}>
-      {name}
-    </Label>
-  ));
-
-  let ID_KhoiCVsArray: number[];
-
-  // Kiểm tra xem ID_KhoiCVs là một mảng hoặc không
-  if (Array.isArray(ent_khuvuc.ID_KhoiCVs)) {
-    // Kiểm tra xem các phần tử trong mảng có phải là số không và chuyển đổi
-    ID_KhoiCVsArray = ent_khuvuc.ID_KhoiCVs.filter((item) => typeof item === 'number').map(Number);
-  } else if (typeof ent_khuvuc.ID_KhoiCVs === 'string') {
-    // Chuyển đổi từ chuỗi sang mảng số
-    ID_KhoiCVsArray = ent_khuvuc.ID_KhoiCVs.replace(/\[|\]/g, '') // Loại bỏ dấu ngoặc vuông
-      .split(', ') // Phân tách các số
-      .map((item) => Number(item?.trim())) // Chuyển đổi từ chuỗi sang số
-      .filter((item) => !Number.isNaN(item)); // Loại bỏ các giá trị không hợp lệ
-  } else {
-    // Trong trường hợp ID_KhoiCVs không phải là mảng hoặc chuỗi, ta gán một mảng rỗng
-    ID_KhoiCVsArray = [];
-  }
-
   const shiftNamesKhoiCV = ent_khuvuc.ent_khuvuc_khoicvs
     .map((calvId) => {
       const workShift = khoiCV?.find((shift) => `${shift.ID_KhoiCV}` === `${calvId.ID_KhoiCV}`);
@@ -138,9 +84,9 @@ export default function AreaTableRow({
     })
     .filter((name) => name !== null);
 
-  const labelsKhoiCV = shiftNamesKhoiCV.map((name, index) => (
+  const labelsKhoiCV = shiftNamesKhoiCV.map((name) => (
     <Label
-      key={index}
+      key={name}
       variant="soft"
       color={
         (`${name}` === 'Khối làm sạch' && 'success') ||
@@ -148,17 +94,23 @@ export default function AreaTableRow({
         (`${name}` === 'Khối bảo vệ' && 'error') ||
         'default'
       }
-      style={{ marginTop: 4 }}
+      style={{margin: 2}}
     >
       {name}
     </Label>
   ));
+  let backgroundColorStyle;
 
+if (Tinhtrang === '1') {
+  backgroundColorStyle = '#FF563029';
+} else {
+  backgroundColorStyle = (index % 2 !== 0) ? '#f3f6f4' : '';
+}
   const renderPrimary = (
     <TableRow
       hover
       selected={selected}
-      style={{ backgroundColor: `${Tinhtrang}` === '1' ? '#FF563029' : '' }}
+      style={{ backgroundColor: backgroundColorStyle }}
     >
       <TableCell padding="checkbox">
         <Checkbox checked={selected} onClick={onSelectRow} />
@@ -173,14 +125,13 @@ export default function AreaTableRow({
             },
           }}
         >
-          C{ID_Checklist}
+          C-{ID_Checklist}
         </Box>
       </TableCell>
       <TableCell>
         <ListItemText primary={Checklist} primaryTypographyProps={{ typography: 'body2' }} />
       </TableCell>
-      <TableCell align="center"> {Giatridinhdanh} </TableCell>
-      <TableCell align="center"> {Giatrinhan} </TableCell>
+      {/* <TableCell align="center"> {Giatrinhan} </TableCell> */}
       <TableCell align="center">
         {' '}
         <ListItemText
@@ -193,7 +144,18 @@ export default function AreaTableRow({
           }}
         />
       </TableCell>
-      <TableCell align="center" sx={{flexDirection:'row'}}>{labels}</TableCell>
+      <TableCell align="center">
+        {' '}
+        <ListItemText
+          primary={ent_khuvuc?.Tenkhuvuc}
+          secondary={ent_khuvuc?.ent_toanha?.Toanha}
+          primaryTypographyProps={{ typography: 'body2' }}
+          secondaryTypographyProps={{
+            component: 'span',
+            color: 'text.disabled',
+          }}
+        />
+      </TableCell>
       <TableCell align="center"> {labelsKhoiCV} </TableCell>
       <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
         <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>

@@ -13,7 +13,7 @@ import { useSettingsContext } from 'src/components/settings';
 
 import { IUser } from 'src/types/khuvuc';
 //
-import GiamsatNewEditForm from '../chia-ca-new-edit-form';
+import GiamsatNewEditForm from '../chia-ca-edit-form';
 
 
 

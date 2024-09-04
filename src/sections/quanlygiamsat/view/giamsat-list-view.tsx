@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import axios from 'axios';
 // @mui
 import { alpha } from '@mui/material/styles';
@@ -87,8 +87,6 @@ export default function GiamsatListView() {
 
   const [filters, setFilters] = useState(defaultFilters);
 
-  const [STATUS_OPTIONS, set_STATUS_OPTIONS] = useState([{ value: 'all', label: 'Tất cả' }]);
-
   const { user } = useGetGiamSatByDuan();
   const { khoiCV } = useGetKhoiCV();
 
@@ -100,15 +98,13 @@ export default function GiamsatListView() {
     }
   }, [user]);
 
-  useEffect(() => {
-    // Assuming khoiCV is set elsewhere in your component
-    khoiCV.forEach((khoi) => {
-      set_STATUS_OPTIONS((prevOptions) => [
-        ...prevOptions,
-        { value: khoi.ID_KhoiCV.toString(), label: khoi.KhoiCV },
-      ]);
-    });
-  }, [khoiCV]);
+  const STATUS_OPTIONS = useMemo(() => [
+    { value: 'all', label: 'Tất cả' },
+    ...khoiCV.map(khoi => ({
+      value: khoi.ID_KhoiCV.toString(),
+      label: khoi.KhoiCV
+    }))
+  ], [khoiCV]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,

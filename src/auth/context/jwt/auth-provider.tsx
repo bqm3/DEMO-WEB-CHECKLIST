@@ -141,7 +141,6 @@ export function AuthProvider({ children }: Props) {
 
     const urlHttp = 'https://checklist.pmcweb.vn/demo/api/ent_user/login';
     const res = await axios.post(urlHttp, data);
-    console.log('res',res)
     const { token, user } = res.data;
 
     setSession(token);

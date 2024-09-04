@@ -92,7 +92,7 @@ export function useNavData() {
         subheader: t('management'),
 
         items:
-          user?.ID_Chucvu !== 3
+          (user?.ID_Chucvu === 2 || user?.ID_Chucvu === 4)
             ? [
                 // KHU VUC
                 {
@@ -193,7 +193,7 @@ export function useNavData() {
       );
     }
     
-    if (user?.ID_Chucvu === 3) {
+    if (user?.ID_Chucvu === 1) {
       navigationData[1].items.unshift(
         {
           title: t('project'),

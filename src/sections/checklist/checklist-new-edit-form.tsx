@@ -124,49 +124,6 @@ export default function ChecklistNewEditForm({ currentChecklist }: Props) {
   const values = watch();
 
   useEffect(() => {
-    // Set loading state to true at the beginning
-    setLoading(true);
-
-    // Declare an array to hold the filtered or full list of calv items
-    const filteredCalv = calv;
-
-    const sCalvArray = Array.isArray(defaultValues.sCalv)
-      ? defaultValues.sCalv
-      : [defaultValues.sCalv];
-
-    // Merge sCalv with the list of ID_Calv from filteredCalv
-    const mergedIDCalv = sCalvArray.concat(filteredCalv?.map((item) => item.ID_Calv));
-
-    // Remove duplicates by creating a Set and converting it back to an array
-    const uniqueIDCalv = Array.from(new Set(mergedIDCalv));
-
-    // Create a new array with the desired structure: { value: ID_Calv, label: Tenca }
-    const newArray = uniqueIDCalv
-      .map((idCalv) => {
-        // Find the corresponding item in the filteredCalv array
-        const item = calv.find((iTem) => iTem.ID_Calv === idCalv);
-
-        // If the item is found, return an object with the desired structure
-        if (item) {
-          return {
-            value: item.ID_Calv,
-            label: `${item.Tenca} - ${item.ent_khoicv.KhoiCV}`,
-          };
-        }
-
-        // If the item is not found, return null or handle it as needed
-        return null;
-      })
-      .filter((item) => item !== null);
-
-    // Update the state with the new array
-    setCalv(newArray);
-
-    // Set loading state to false at the end
-    setLoading(false);
-  }, [calv, defaultValues.sCalv]);
-
-  useEffect(() => {
     let filteredToanha;
     // Filter the hangMuc array based on ID_KhoiCV from values
     if (values.ID_Toanha) {
@@ -202,32 +159,6 @@ export default function ChecklistNewEditForm({ currentChecklist }: Props) {
     }));
 
     setHangMuc(newArray);
-    if (newArray.length > 0) {
-      const filteredCa = calv?.filter((shift) =>
-        // Check if the shift's ID_KhoiCV is included in the list of ID_KhoiCVs from newArray
-        newArray[0].Hangmuc.ent_khuvuc.ID_KhoiCVs.includes(shift.ID_KhoiCV)
-      );
-      const newArrayCalv = filteredCa
-        .map((idCalv) => {
-          // Find the corresponding item in the filteredCalv array
-          const item = calv.find((iTem) => iTem.ID_Calv === idCalv.ID_Calv);
-
-          // If the item is found, return an object with the desired structure
-          if (item) {
-            return {
-              value: item.ID_Calv,
-              label: `${item.Tenca} - ${item.ent_khoicv.KhoiCV}`,
-            };
-          }
-
-          // If the item is not found, return null or handle it as needed
-          return null;
-        })
-        .filter((item) => item !== null);
-
-      // Update the state with the new array
-      setCalv(newArrayCalv);
-    }
   }, [values.ID_Khuvuc, hangMuc, calv]);
 
   useEffect(() => {
@@ -417,16 +348,6 @@ export default function ChecklistNewEditForm({ currentChecklist }: Props) {
                 </MenuItem>
               ))}
             </RHFSelect>
-
-            {loading === false && (
-              <>
-                {Calv.length > 0 && Calv?.length > 0 ? (
-                  <RHFMultiSelect checkbox name="sCalv" label="Ca làm việc *" options={Calv} />
-                ) : (
-                  <></>
-                )}
-              </>
-            )}
           </Stack>
         </Card>
       </Grid>

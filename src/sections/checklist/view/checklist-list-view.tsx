@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import axios from 'axios';
 // @mui
 import { alpha } from '@mui/material/styles';
@@ -27,6 +27,7 @@ import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { LoadingButton } from '@mui/lab';
+import Pagination, { paginationClasses } from '@mui/material/Pagination';
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import {
@@ -52,14 +53,12 @@ import TableSelectedAction from '../table-selected-action';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'ID_Checklist', label: 'Mã', width: 50 },
+  { id: 'ID_Checklist', label: 'Mã', width: 10 },
   { id: 'Checklist', label: 'Tên checklist' },
-  { id: 'Giatridinhdanh', label: 'Giá trị định danh', width: 120, align: 'center' },
-  { id: 'Giatrinhan', label: 'Giá trị nhận', width: 150, align: 'center' },
-  { id: 'ID_Hangmuc', label: 'Hạng mục', width: 150, align: 'center' },
-  { id: 'sCalv', label: 'Ca làm việc', width: 200, align: 'center' },
-  { id: 'ID_KhoiCVs', label: 'Khối công việc', width: 200, align: 'center' },
-  { id: '', width: 88 },
+  { id: 'ID_Hangmuc', label: 'Hạng mục', width: 220, align: 'center' },
+  { id: 'ID_Khuvuc', label: 'Khu vực', width: 220, align: 'center' },
+  { id: 'ID_KhoiCVs', label: 'Khối công việc', width: 250, align: 'center' },
+  { id: '', width: 10 },
 ];
 
 const defaultFilters: IKhuvucTableFilters = {
@@ -99,17 +98,16 @@ export default function ChecklistCalvListView() {
 
   const { khoiCV } = useGetKhoiCV();
 
-  const [STATUS_OPTIONS, set_STATUS_OPTIONS] = useState([{ value: 'all', label: 'Tất cả' }]);
-
-  useEffect(() => {
-    // Assuming khoiCV is set elsewhere in your component
-    khoiCV.forEach((khoi) => {
-      set_STATUS_OPTIONS((prevOptions) => [
-        ...prevOptions,
-        { value: khoi.ID_KhoiCV.toString(), label: khoi.KhoiCV },
-      ]);
-    });
-  }, [khoiCV]);
+  const STATUS_OPTIONS = useMemo(
+    () => [
+      { value: 'all', label: 'Tất cả' },
+      ...khoiCV.map((khoi) => ({
+        value: khoi.ID_KhoiCV.toString(),
+        label: khoi.KhoiCV,
+      })),
+    ],
+    [khoiCV]
+  );
 
   // Use the checklist data in useEffect to set table data
   useEffect(() => {
@@ -129,7 +127,7 @@ export default function ChecklistCalvListView() {
     table.page * table.rowsPerPage + table.rowsPerPage
   );
 
-  const denseHeight = table.dense ? 52 : 72;
+  const denseHeight = table.dense ? 60 : 60;
 
   const canReset = !!filters.name || filters.status !== 'all';
 
@@ -266,34 +264,14 @@ export default function ChecklistCalvListView() {
   ];
 
   const [dataFormatExcel, setDataFormatExcel] = useState<any>([]);
-
-  // useEffect(() => {
-  //   const formattedData = dataFiltered?.map((item, index) => {
-  //     const shiftNames = [item.calv_1, item.calv_2, item.calv_3, item.calv_4]
-  //       .map((calvId: any) => {
-  //         const workShift = calv?.find((shift) => `${shift.ID_Calv}` === `${calvId}`);
-  //         return workShift ? workShift.Tenca : null;
-  //       })
-  //       .filter((name: any) => name !== null)
-  //       .join(', ');
-
-  //     const shiftNamesArray = shiftNames?.split(', ');
-
-  //     return {
-  //       stt: index + 1,
-  //       Checklist: item.Checklist || '',
-  //       Giatridinhdanh: item.Giatridinhdanh || '',
-  //       Giatrinhan: item.Giatrinhan || '',
-  //       Tentang: item.ent_tang.Tentang || '',
-  //       Sothutu: item.Sothutu || '',
-  //       Maso: item.Maso || '',
-  //       Hangmuc: item.ent_hangmuc.Hangmuc || '',
-  //       caLvs: shiftNamesArray || '',
-  //     };
-  //   });
-  //   setDataFormatExcel(formattedData);
-  // }, [dataFiltered, calv]);
-
+  function roundToNearestInteger(value: number) {
+    // Làm tròn lên số nguyên gần nhất
+    return Math.round(value);
+  }
+  console.log(
+    'tableData',
+    roundToNearestInteger(Number(tableData.length) / Number(table.rowsPerPage))
+  );
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'xl'}>
@@ -444,7 +422,7 @@ export default function ChecklistCalvListView() {
               //
               onResetFilters={handleResetFilters}
               //
-              results={dataFiltered?.length}
+              results={dataInPage?.length}
               sx={{ p: 2.5, pt: 0 }}
             />
           )}
@@ -453,11 +431,11 @@ export default function ChecklistCalvListView() {
             <TableSelectedAction
               dense={table.dense}
               numSelected={table.selected.length}
-              rowCount={tableData.length}
+              rowCount={dataInPage.length}
               onSelectAllRows={(checked) =>
                 table.onSelectAllRows(
                   checked,
-                  tableData.map((row) => row?.ID_Checklist)
+                  dataInPage.map((row) => row?.ID_Checklist)
                 )
               }
               action={
@@ -481,7 +459,7 @@ export default function ChecklistCalvListView() {
                   onSelectAllRows={(checked: any) =>
                     table.onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.ID_Checklist)
+                      dataInPage.map((row) => row.ID_Checklist)
                     )
                   }
                 />
@@ -492,8 +470,9 @@ export default function ChecklistCalvListView() {
                       table.page * table.rowsPerPage,
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
-                    .map((row) => (
+                    .map((row, index) => (
                       <ChecklistTableRow
+                        index={index}
                         key={row.ID_Checklist}
                         calv={calv}
                         row={row}
@@ -507,7 +486,7 @@ export default function ChecklistCalvListView() {
 
                   <TableEmptyRows
                     height={denseHeight}
-                    emptyRows={emptyRows(0, table.rowsPerPage, tableData?.length)}
+                    emptyRows={emptyRows(table.page, table.rowsPerPage, tableData?.length)}
                   />
 
                   <TableNoData notFound={notFound} />
@@ -516,16 +495,17 @@ export default function ChecklistCalvListView() {
             </Scrollbar>
           </TableContainer>
 
-          <TablePaginationCustom
-            count={dataFiltered.length}
-            rowsPerPageOptions={[20, 30, 50]}
-            page={table.page}
-            rowsPerPage={table.rowsPerPage}
-            onPageChange={table.onChangePage}
-            onRowsPerPageChange={table.onChangeRowsPerPage}
-            //
-            dense={table.dense}
-            onChangeDense={table.onChangeDense}
+          <Pagination
+            count={roundToNearestInteger(Number(dataFiltered.length) / Number(table.rowsPerPage))}
+            page={table.page + 1} // Pagination component in MUI uses 1-based index for page numbers
+            onChange={(event, newPage) => table.onChangePage(event, newPage - 1)} // Adjust for 0-based index
+            boundaryCount={1}
+            sx={{
+              my: 2,
+              mx: 1,
+              display: 'flex',
+              justifyContent: 'flex-end',
+            }}
           />
         </Card>
       </Container>
@@ -595,7 +575,9 @@ function applyFilter({
         `${checklist.MaQrCode}`.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
         `${checklist.ent_hangmuc.Hangmuc}`.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
         `${checklist.ent_tang.Tentang}`.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-        `${checklist.ent_hangmuc.MaQrCode}`.toLowerCase().indexOf(name.toLowerCase()) !== -1
+        `${checklist.ent_hangmuc.MaQrCode}`.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+        `${checklist.ent_khuvuc.MaQrCode}`.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+        `${checklist.ent_khuvuc.Tenkhuvuc}`.toLowerCase().indexOf(name.toLowerCase()) !== -1
     );
   }
 

@@ -29,7 +29,6 @@ interface Props extends DialogProps {
   onClose: VoidFunction;
 }
 
-
 const STORAGE_KEY = 'accessToken';
 
 export default function FileManagerNewFolderDialog({
@@ -45,12 +44,9 @@ export default function FileManagerNewFolderDialog({
   onChangeFolderName,
   ...other
 }: Props) {
-
   const accessToken = localStorage.getItem(STORAGE_KEY);
 
   const { enqueueSnackbar } = useSnackbar();
-
-  
 
   const [files, setFiles] = useState<(File | string)[]>([]);
 
@@ -74,35 +70,34 @@ export default function FileManagerNewFolderDialog({
   );
 
   const handleUpload = async () => {
-
-    
     onClose();
     const formData = new FormData();
     if (Array.isArray(files)) {
-      files.forEach(file => {
+      files.forEach((file) => {
         formData.append('files', file);
       });
     } else {
       formData.append('files', files); // Fallback for a single file upload
     }
-    setLoading(true)
+    setLoading(true);
     try {
-      
-      const response = await axios.post('https://checklist.pmcweb.vn/demo/api/ent_khuvuc/uploads', formData, {
+      await axios.post('https://checklist.pmcweb.vn/demo/api/ent_khuvuc/uploads', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${accessToken}`,
-        }
+        },
       });
       // setUploadedFileName(response.data.filename);
       enqueueSnackbar('Uploads dữ liệu thành công!');
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
-      setLoading(false)
+      setLoading(false);
+      const errorMessage = error.response?.data?.message || 'Uploads dữ liệu thất bại';
+
       enqueueSnackbar({
         variant: 'error',
         autoHideDuration: 2000,
-        message: 'Uploads dữ liệu thất bại',
+        message: errorMessage,
       });
     }
   };

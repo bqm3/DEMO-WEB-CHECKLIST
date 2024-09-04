@@ -116,7 +116,7 @@ export default function UserNewEditForm({ currentUser }: Props) {
   const NewUserSchema = Yup.object().shape({
     UserName: Yup.string().required('Tài khoản là bắt buộc'),
     Email: Yup.string().required('Email là bắt buộc').email('Chưa đúng định dạng Email'),
-    Hoten: Yup.string().required('Phải có tên giám sát'),
+    Hoten: Yup.string().required('Phải có họ tên'),
     Sodienthoai: Yup.string().required('Phải có số điện thoại'),
     Ngaysinh: Yup.mixed<any>().nullable().required('Phải có ngày sinh'),
     Password: Yup.string().required('Mật khẩu là bắt buộc'),
@@ -462,7 +462,7 @@ export default function UserNewEditForm({ currentUser }: Props) {
         >
           <RHFTextField name="UserName" label="Tài khoản" />
           <RHFTextField name="Email" label="Email" />
-          <RHFTextField name="Hoten" label="Tên giám sát" />
+          <RHFTextField name="Hoten" label="Họ tên" />
           <RHFTextField name="Sodienthoai" label="Số điện thoại" />
           <Stack spacing={1}>
             <Typography variant="subtitle2">Giới tính</Typography>

@@ -113,8 +113,6 @@ export const OverviewReportView = () => {
       limit: table.rowsPerPage,
     });
 
-    const [STATUS_OPTIONS, set_STATUS_OPTIONS] = useState([{ value: 'all', label: 'Tất cả' }]);
-
 
   const { calv } = useGetCalv();
 
@@ -126,16 +124,7 @@ export const OverviewReportView = () => {
       setTableData(tb_checkList);
     }
   }, [tb_checkList]);
-
-  useEffect(() => {
-    // Assuming khoiCV is set elsewhere in your component
-    khoiCV.forEach((khoi) => {
-      set_STATUS_OPTIONS((prevOptions) => [
-        ...prevOptions,
-        { value: khoi.ID_KhoiCV.toString(), label: khoi.KhoiCV },
-      ]);
-    });
-  }, [khoiCV]);
+  
 
   const dataFiltered = applyFilter({
     inputData: tableData,

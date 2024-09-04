@@ -54,7 +54,6 @@ export default function AreaTableRow({
     ID_KhoiCV,
     Ngay,
     ID_Calv,
-    ID_Giamsat,
     TongC,
     Tong,
     Giobd,
@@ -69,9 +68,9 @@ export default function AreaTableRow({
     Anh3,
     Giochupanh4,
     Anh4,
-    ent_giamsat,
     ent_khoicv,
     ent_calv,
+    ent_user
   } = row;
 
   const confirm = useBoolean();
@@ -89,7 +88,7 @@ export default function AreaTableRow({
     <TableRow hover selected={selected}>
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>{formattedDate}</TableCell>
 
-      <TableCell align="center"> {ent_giamsat?.Hoten} </TableCell>
+      <TableCell align="center"> {ent_user?.Hoten} </TableCell>
       <TableCell align="center">
         {' '}
        {Tong}

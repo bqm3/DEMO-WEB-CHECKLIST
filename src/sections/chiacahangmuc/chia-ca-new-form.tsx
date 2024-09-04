@@ -18,7 +18,14 @@ import { useResponsive } from 'src/hooks/use-responsive';
 // _mock
 import { _tags, _roles, USER_GENDER_OPTIONS } from 'src/_mock';
 // api
-import { useGetCalv, useGetKhoiCV, useGetKhuvucByToanha, useGetProfile } from 'src/api/khuvuc';
+import {
+  useGetCalv,
+  useGetDetailPhanCaByDuan,
+  useGetKhoiCV,
+  useGetKhuVuc,
+  useGetProfile,
+  useGetToanha,
+} from 'src/api/khuvuc';
 // components
 import { useSnackbar } from 'src/components/snackbar';
 // types
@@ -33,13 +40,9 @@ import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@m
 
 // ----------------------------------------------------------------------
 
-type Props = {
-  id?: string;
-};
-
 const STORAGE_KEY = 'accessToken';
 
-export default function ChiaCaNewEditForm({ id }: Props) {
+export default function ChiaCaNewEditForm() {
   const router = useRouter();
 
   const settings = useSettingsContext();
@@ -52,22 +55,27 @@ export default function ChiaCaNewEditForm({ id }: Props) {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const [optionKhoiCV, setOptionKhoiCV] = useState<IKhoiCV>();
-
-  const [optionCalv, setOptionCalv] = useState<ICalv>();
+  const [optionKhoiCV, setOptionKhoiCV] = useState<any>();
+  const [optionToaNha, setOptionToaNha] = useState<any>([]);
+  const [optionCalv, setOptionCalv] = useState<any>();
   const [selectedChuky, setSelectedChuky] = useState(1);
   const [areasData, setAreasData] = useState<IKhuvuc[]>([]);
 
   const [checkedStates, setCheckedStates] = useState<any>([]);
 
-  const { khuvuc, user } = useGetKhuvucByToanha(id);
+  const { khuvuc } = useGetKhuVuc();
 
   const [Calv, setCalv] = useState<ICalv[]>([]);
 
-  const [KhoiCV, setKhoiCV] = useState<IKhoiCV[]>([]);
+  const [KhoiCV, setKhoiCV] = useState<any>();
+
+  const [ToaNha, setToaNha] = useState<any>();
 
   const { khoiCV } = useGetKhoiCV();
+
   const { calv } = useGetCalv();
+
+  const { toanha } = useGetToanha();
 
   useEffect(() => {
     if (khoiCV?.length > 0) {
@@ -76,9 +84,15 @@ export default function ChiaCaNewEditForm({ id }: Props) {
   }, [khoiCV]);
 
   useEffect(() => {
+    if (toanha.length > 0) {
+      setToaNha(toanha);
+    }
+  }, [toanha]);
+
+  useEffect(() => {
     if (calv?.length > 0) {
       if (optionKhoiCV) {
-        const newCalv = calv.filter((item) => item.ID_KhoiCV === optionKhoiCV.ID_KhoiCV);
+        const newCalv = calv.filter((item: any) => item.ID_KhoiCV === optionKhoiCV.ID_KhoiCV);
         setCalv(newCalv);
       } else {
         setCalv(calv);
@@ -87,18 +101,28 @@ export default function ChiaCaNewEditForm({ id }: Props) {
   }, [calv, optionKhoiCV]);
 
   const handleChangeKhoiCV = (event: any) => {
-    const selectedKhoiCV = KhoiCV.find((item) => item.ID_KhoiCV === event.target.value);
+    const selectedKhoiCV = KhoiCV.find((item: any) => item.ID_KhoiCV === event.target.value);
     setOptionKhoiCV(selectedKhoiCV);
   };
 
   const handleChangeCalv = (event: any) => {
-    const selectedCalv = Calv.find((item) => item.ID_Calv === event.target.value);
+    const selectedCalv = Calv.find((item: any) => item.ID_Calv === event.target.value);
     setOptionCalv(selectedCalv);
   };
 
   const handleChukyChange = (event: any) => {
     setSelectedChuky(event.target.value);
   };
+
+  const handleToanhaChange = (event: any) => {
+    const {
+      target: { value },
+    } = event;
+    setOptionToaNha(
+      typeof value === 'string' ? value.split(',') : value
+    );
+  };
+
 
   useEffect(() => {
     if (khuvuc) {
@@ -117,7 +141,23 @@ export default function ChiaCaNewEditForm({ id }: Props) {
         )
       );
     }
-  }, [khuvuc, optionKhoiCV]);
+    if(optionToaNha) {
+      const filteredAreas = optionToaNha
+        ? khuvuc.filter((kv) => optionToaNha.includes(kv.ID_Toanha))
+        : khuvuc;
+
+      setAreasData(filteredAreas);
+      setCheckedStates(
+        filteredAreas.map((kv) =>
+          kv.ent_hangmuc.map((hm, index) => ({
+            ID_Hangmuc: hm.ID_Hangmuc,
+            Index: index,
+            checked: false,
+          }))
+        )
+      );
+    }
+  }, [khuvuc, optionKhoiCV, optionToaNha]);
 
   const handleParentChange = (buildingIndex: any) => (event: any) => {
     const isChecked = event.target.checked;
@@ -145,16 +185,17 @@ export default function ChiaCaNewEditForm({ id }: Props) {
 
   const onSubmit = async () => {
     setLoading(true);
-    const ID_HangmucCheckedTrue = checkedStates.flat()
-    .filter((item:any) => item.checked)
-    .map((item:any) => item.ID_Hangmuc);
+    const ID_HangmucCheckedTrue = checkedStates
+      .flat()
+      .filter((item: any) => item.checked)
+      .map((item: any) => item.ID_Hangmuc);
     const data = {
       ID_KhoiCV: optionKhoiCV?.ID_KhoiCV,
       ID_Calv: optionCalv?.ID_Calv,
       Ngaythu: selectedChuky,
       ID_Hangmucs: ID_HangmucCheckedTrue,
-      Sochecklist: 100
-    }
+      Sochecklist: 100,
+    };
     await axios
       .post(`https://checklist.pmcweb.vn/demo/api/ent_thietlapca/create`, data, {
         headers: {
@@ -276,6 +317,27 @@ export default function ChiaCaNewEditForm({ id }: Props) {
       <Card>
         <Stack spacing={3} sx={{ p: 3 }}>
           <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
+            {ToaNha?.length > 0 && (
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Tòa nhà</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  name="Toanha"
+                  value={optionToaNha}
+                  label="Tòa nhà"
+                  multiple
+                  onChange={handleToanhaChange}
+                >
+                  {ToaNha?.map((item: any) => (
+                    <MenuItem key={item?.ID_Toanha} value={item.ID_Toanha}>
+                      {item?.Toanha}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
+
             {KhoiCV?.length > 0 && (
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">Khối công việc</InputLabel>
@@ -287,8 +349,8 @@ export default function ChiaCaNewEditForm({ id }: Props) {
                   label="Khối công việc"
                   onChange={handleChangeKhoiCV}
                 >
-                  {KhoiCV?.map((item) => (
-                    <MenuItem key={item?.ID_KhoiCV} value={item.ID_KhoiCV}>
+                  {KhoiCV?.map((item: any) => (
+                    <MenuItem key={item?.KhoiCV} value={item.ID_KhoiCV}>
                       {item?.KhoiCV}
                     </MenuItem>
                   ))}
@@ -325,7 +387,7 @@ export default function ChiaCaNewEditForm({ id }: Props) {
                   label="Ca làm việc"
                   onChange={handleChangeCalv}
                 >
-                  {Calv?.map((item) => (
+                  {Calv?.map((item: any) => (
                     <MenuItem key={item?.ID_Calv} value={item?.ID_Calv}>
                       {item?.Tenca}
                     </MenuItem>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 // @mui
 import Grid from '@mui/material/Unstable_Grid2';
@@ -86,17 +86,14 @@ export default function OverviewAnalyticsView() {
   const [selectedKhoiCV, setSelectedKhoiCV] = useState('all');
 
   const { khoiCV } = useGetKhoiCV();
-  const [STATUS_OPTIONS, set_STATUS_OPTIONS] = useState([{ value: 'all', label: 'Tất cả' }]);
 
-  useEffect(() => {
-    // Assuming khoiCV is set elsewhere in your component
-    khoiCV.forEach((khoi) => {
-      set_STATUS_OPTIONS((prevOptions) => [
-        ...prevOptions,
-        { value: khoi.ID_KhoiCV.toString(), label: khoi.KhoiCV },
-      ]);
-    });
-  }, [khoiCV]);
+  const STATUS_OPTIONS = useMemo(() => [
+    { value: 'all', label: 'Tất cả' },
+    ...khoiCV.map(khoi => ({
+      value: khoi.ID_KhoiCV.toString(),
+      label: khoi.KhoiCV
+    }))
+  ], [khoiCV]);
 
   useEffect(() => {
     const handleDataDuan = async () => {

@@ -6,7 +6,7 @@ import { paths } from 'src/routes/paths';
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 //
-import ChiaCaNewEditForm from '../chia-ca-new-edit-form';
+import ChiaCaNewEditForm from '../chia-ca-new-form';
 
 // ----------------------------------------------------------------------
 

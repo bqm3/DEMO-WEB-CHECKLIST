@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import axios from 'axios';
 // @mui
 import { alpha } from '@mui/material/styles';
@@ -87,8 +87,7 @@ export default function ChiacaListView() {
 
   const [filters, setFilters] = useState(defaultFilters);
 
-  const [STATUS_OPTIONS, set_STATUS_OPTIONS] = useState([{ value: 'all', label: 'Tất cả' }]);
-
+  
   const { thietlapca } = useGetPhanCaByDuan();
 
   const { khoiCV } = useGetKhoiCV();
@@ -101,15 +100,13 @@ export default function ChiacaListView() {
     }
   }, [thietlapca]);
 
-  useEffect(() => {
-    // Assuming khoiCV is set elsewhere in your component
-    khoiCV.forEach((khoi) => {
-      set_STATUS_OPTIONS((prevOptions) => [
-        ...prevOptions,
-        { value: khoi.ID_KhoiCV.toString(), label: khoi.KhoiCV },
-      ]);
-    });
-  }, [khoiCV]);
+  const STATUS_OPTIONS = useMemo(() => [
+    { value: 'all', label: 'Tất cả' },
+    ...khoiCV.map(khoi => ({
+      value: khoi.ID_KhoiCV.toString(),
+      label: khoi.KhoiCV
+    }))
+  ], [khoiCV]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -189,7 +186,7 @@ export default function ChiacaListView() {
 
   const handleViewRow = useCallback(
     (id: string) => {
-      router.push(paths.dashboard.quanlygiamsat.edit(id));
+      router.push(paths.dashboard.phanquyenchecklist.edit(id));
     },
     [router]
   );

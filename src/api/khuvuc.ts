@@ -750,6 +750,34 @@ export function useGetPhanCaByDuan(){
   return memoizedValue;
 }
 
+export function useGetDetailPhanCaByDuan(id?: string) {
+  const accessToken = localStorage.getItem(STORAGE_KEY);
+  const URL = `https://checklist.pmcweb.vn/demo/api/ent_thietlapca/${id}`;
+  const fetCher = (url: string) =>
+    fetch(url, {
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }).then((res) => res.json());
+  const { data, isLoading, error, isValidating } = useSWR(URL, fetCher);
+
+  const memoizedValue = useMemo(
+    () => ({
+      thietlapca: (data?.thietlapca as IThietLapCa),
+      khuvucCheck: (data?.data as IKhuvuc[]) || [],
+      thietlapcaLoading: isLoading,
+      thietlapcaError: error,
+      thietlapcaValidating: isValidating,
+      thietlapcaEmpty: !isLoading && !data?.length,
+    }),
+    [data, error, isLoading, isValidating]
+  );
+
+  return memoizedValue;
+}
+
 export function useGetProfile(id: string){
   const accessToken = localStorage.getItem(STORAGE_KEY);
   const URL = `https://checklist.pmcweb.vn/demo/api/ent_user/${id}`;
