@@ -121,9 +121,9 @@ const CalvNewPage = lazy(() => import('src/pages/dashboard/calv/new'));
 const CalvEditPage = lazy(() => import('src/pages/dashboard/calv/edit'));
 
 // Giam sat
-const GiamsatListsPage = lazy(() => import('src/pages/dashboard/giamsat/list'));
-const GiamsatNewPage = lazy(() => import('src/pages/dashboard/phanquyenchecklist/new'));
-const GiamsatEditPage = lazy(() => import('src/pages/dashboard/giamsat/edit'));
+const ChukyDuanListsPage = lazy(() => import('src/pages/dashboard/chukyduan/list'));
+const ChukyDuanNewPage = lazy(() => import('src/pages/dashboard/chukyduan/new'));
+const ChukyDuanEditPage = lazy(() => import('src/pages/dashboard/chukyduan/edit'));
 
 
 const QuanlyCaHangMucListsPage = lazy(() => import('src/pages/dashboard/phanquyenchecklist/list'));
@@ -217,6 +217,15 @@ export const dashboardRoutes = [
           { path: 'list', element: <KhuVucListsPage /> },
           { path: ':id/edit', element: <KhuvucEditPage /> },
           { path: 'new', element: <KhuVucNewPage /> },
+        ],
+      },
+      {
+        path: 'chu-ky-du-an',
+        children: [
+          { element: <ChukyDuanListsPage />, index: true },
+          { path: 'list', element: <ChukyDuanListsPage /> },
+          { path: ':id/edit', element: <ChukyDuanEditPage /> },
+          { path: 'new', element: <ChukyDuanNewPage /> },
         ],
       },
       {

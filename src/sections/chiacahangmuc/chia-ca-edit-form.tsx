@@ -63,6 +63,7 @@ export default function ChiaCaNewEditForm({ id }: Props) {
   const [optionToaNha, setOptionToaNha] = useState<any>([]);
   const [optionCalv, setOptionCalv] = useState<any>();
   const [selectedChuky, setSelectedChuky] = useState(1);
+  const [chukyData, setChukyData] = useState<any>(1);
   const [areasData, setAreasData] = useState<IKhuvuc[]>([]);
 
   const [checkedStates, setCheckedStates] = useState<any>([]);
@@ -108,6 +109,7 @@ export default function ChiaCaNewEditForm({ id }: Props) {
     }
   }, [khuvucCheck]);
 
+
   useEffect(() => {
     if (thietlapca && calv && KhoiCV) {
       const newCalv = calv?.filter((item: any) => `${item.ID_Calv}` === `${thietlapca?.ID_Calv}`);
@@ -117,6 +119,10 @@ export default function ChiaCaNewEditForm({ id }: Props) {
         (item: any) => `${item.ID_KhoiCV}` === `${thietlapca?.ent_calv?.ID_KhoiCV}`
       );
       setOptionKhoiCV(selectedKhoiCV[0]);
+
+      const arrChuky = thietlapca.ent_duan.ent_duan_khoicv;
+      const chukyDetail = arrChuky.filter((item: any) => `${thietlapca?.ent_calv?.ID_KhoiCV}` === `${item.ID_KhoiCV}`)
+      setChukyData(chukyDetail[0].Chuky)
     }
   }, [thietlapca, KhoiCV, calv]);
 
@@ -378,7 +384,7 @@ export default function ChiaCaNewEditForm({ id }: Props) {
                   label="Ngày thực thiện"
                   onChange={handleChukyChange}
                 >
-                  {[...Array(Number(optionKhoiCV.Chuky))].map((_, index) => (
+                  {[...Array(Number(chukyData))].map((_, index) => (
                     <MenuItem key={index + 1} value={index + 1}>
                       {index + 1}
                     </MenuItem>

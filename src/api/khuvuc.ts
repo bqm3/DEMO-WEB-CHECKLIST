@@ -1,5 +1,5 @@
 
-import { IKhuvuc, IToanha, IKhoiCV, IHangMuc, IChecklist, ICalv, E_Tang, IGiamsat, IChucvu, IDuan, IUser, ITang, ITbChecklist, TbChecklistCalv, IThietLapCa } from 'src/types/khuvuc';
+import { IKhuvuc, IToanha, IKhoiCV, IHangMuc, IChecklist, ICalv, E_Tang, IGiamsat, IChucvu, IDuan, IUser, ITang, ITbChecklist, TbChecklistCalv, IThietLapCa, IDuanKhoiCV } from 'src/types/khuvuc';
 // utils
 import { endpoints, fetcher } from 'src/utils/axios';
 import { useEffect, useMemo } from 'react';
@@ -9,6 +9,59 @@ import useSWR from 'swr';
 import { IChinhanh, IChucVu, INhompb } from 'src/types/scan';
 
 const STORAGE_KEY = 'accessToken';
+
+export function useGetChuKyDuAn() {
+  const accessToken = localStorage.getItem(STORAGE_KEY);
+  const URL = 'https://checklist.pmcweb.vn/demo/api/ent_duan_khoicv/';
+  const fetCher = (url: string) =>
+    fetch(url, {
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }).then((res) => res.json());
+  const { data, isLoading, error, isValidating } = useSWR(URL, fetCher);
+
+  const memoizedValue = useMemo(
+    () => ({
+      duankhoicv: (data?.data as IDuanKhoiCV[]) || [],
+      duankhoicvLoading: isLoading,
+      duankhoicvError: error,
+      duankhoicvValidating: isValidating,
+      duankhoicvEmpty: !isLoading && !data?.length,
+    }),
+    [data, error, isLoading, isValidating]
+  );
+
+  return memoizedValue;
+}
+
+export function useGetChuKyDuAnDetail(id: string) {
+  const accessToken = localStorage.getItem(STORAGE_KEY);
+  const URL = `https://checklist.pmcweb.vn/demo/api/ent_duan_khoicv/${id}`;
+  const fetCher = (url: string) =>
+    fetch(url, {
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }).then((res) => res.json());
+  const { data, isLoading, error, isValidating } = useSWR(URL, fetCher);
+
+  const memoizedValue = useMemo(
+    () => ({
+      duankhoicv: (data?.data as IDuanKhoiCV) || [],
+      duankhoicvLoading: isLoading,
+      duankhoicvError: error,
+      duankhoicvValidating: isValidating,
+      duankhoicvEmpty: !isLoading && !data?.length,
+    }),
+    [data, error, isLoading, isValidating]
+  );
+
+  return memoizedValue;
+}
 
 export function useGetCalv() {
   const accessToken = localStorage.getItem(STORAGE_KEY);

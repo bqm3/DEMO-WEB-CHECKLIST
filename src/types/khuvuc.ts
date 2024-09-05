@@ -52,6 +52,8 @@ export type E_Toanha = {
 
 export type E_Duan = {
   Duan: string;
+  ID_Duan: string;
+  ent_duan_khoicv: IDuanKhoiCV
 };
 
 export type E_Calv = {
@@ -84,6 +86,7 @@ export type IDuan = {
   totalHangmucInDuan: string;
   toanhas: IToanha[];
   ent_nhom: INhom;
+  ent_duan_khoicv: IDuanKhoiCV[]
 };
 
 export type IGiamsat = {
@@ -195,6 +198,16 @@ export type IKhoiCV = {
   Chuky: string;
   Ngaybatdau: Date;
   
+};
+
+export type IDuanKhoiCV = {
+  ID_Duan_KhoiCV: string;
+  ID_KhoiCV: string;
+  ID_Duan: string;
+  Ngaybatdau: string;
+  Chuky: string;
+  ent_duan: IDuan;
+  ent_khoicv: IKhoiCV;
 };
 
 export type ICalv = {

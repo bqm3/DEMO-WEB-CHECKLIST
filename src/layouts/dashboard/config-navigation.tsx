@@ -60,7 +60,7 @@ export function useNavData() {
         subheader: t('overview'),
         items: (() => {
           if (!user) return [];
-      
+
           if (user.ID_Chucvu === 2) {
             return [
               {
@@ -75,7 +75,7 @@ export function useNavData() {
               },
             ];
           }
-      
+
           return [
             {
               title: t('management'),
@@ -85,14 +85,13 @@ export function useNavData() {
           ];
         })(),
       },
-      
-      
+
       // MANAGEMENT
       {
         subheader: t('management'),
 
         items:
-          (user?.ID_Chucvu === 2 || user?.ID_Chucvu === 4)
+          user?.ID_Chucvu === 2 || user?.ID_Chucvu === 4
             ? [
                 // KHU VUC
                 {
@@ -110,8 +109,7 @@ export function useNavData() {
                   icon: ICONS.kanban,
                   children: [
                     { title: t('list'), path: paths.dashboard.hangmuc.root },
-                    { title: t('create'), path: paths.dashboard.hangmuc.new,  },
-                    
+                    { title: t('create'), path: paths.dashboard.hangmuc.new },
                   ],
                 },
                 {
@@ -123,7 +121,7 @@ export function useNavData() {
                     { title: t('create'), path: paths.dashboard.calv.new },
                   ],
                 },
-              
+
                 {
                   title: t('phanquyenchecklist'),
                   path: paths.dashboard.phanquyenchecklist.root,
@@ -192,7 +190,7 @@ export function useNavData() {
         }
       );
     }
-    
+
     if (user?.ID_Chucvu === 1) {
       navigationData[1].items.unshift(
         {
@@ -205,21 +203,12 @@ export function useNavData() {
           ],
         },
         {
-          title: t('building'),
-          path: paths.dashboard.toanha.root,
-          icon: ICONS.banking,
+          title: t('chukyduan'),
+          path: paths.dashboard.chukyduan.root,
+          icon: ICONS.analytics,
           children: [
-            { title: t('create'), path: paths.dashboard.toanha.new },
-            { title: t('list'), path: paths.dashboard.toanha.root },
-          ],
-        },
-        {
-          title: t('tang'),
-          path: paths.dashboard.tang.root,
-          icon: ICONS.tour,
-          children: [
-            { title: t('create'), path: paths.dashboard.tang.new },
-            { title: t('list'), path: paths.dashboard.tang.root },
+            { title: t('create'), path: paths.dashboard.chukyduan.new },
+            { title: t('list'), path: paths.dashboard.chukyduan.root },
           ],
         },
         {
@@ -233,7 +222,6 @@ export function useNavData() {
         }
       );
     }
-    
 
     return navigationData;
   }, [t, user]);
