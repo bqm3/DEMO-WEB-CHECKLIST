@@ -14,6 +14,14 @@ import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
 import Stack from '@mui/material/Stack';
+import {
+  Pagination,
+  paginationClasses,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from '@mui/material';
 // routes
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
@@ -27,7 +35,6 @@ import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { LoadingButton } from '@mui/lab';
-import Pagination, { paginationClasses } from '@mui/material/Pagination';
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import {
@@ -98,6 +105,17 @@ export default function ChecklistCalvListView() {
 
   const { khoiCV } = useGetKhoiCV();
 
+  const [rowsPerPageCustom, setRowsPerPageCustom] = useState(table?.rowsPerPage || 30); // Giá trị mặc định của số mục trên mỗi trang
+
+  const handleRowsPerPageChange = (event: any) => {
+    const val = event.target.value; 
+    setRowsPerPageCustom(val);
+    table?.onChangeRowsPerPage(val); 
+  };
+
+  console.log('rowsPerPage', rowsPerPageCustom);
+
+  console.log('table.rowsPerPage', table.rowsPerPage, typeof table.rowsPerPage);
   const STATUS_OPTIONS = useMemo(
     () => [
       { value: 'all', label: 'Tất cả' },
@@ -268,10 +286,7 @@ export default function ChecklistCalvListView() {
     // Làm tròn lên số nguyên gần nhất
     return Math.round(value);
   }
-  console.log(
-    'tableData',
-    roundToNearestInteger(Number(tableData.length) / Number(table.rowsPerPage))
-  );
+
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'xl'}>
@@ -494,19 +509,46 @@ export default function ChecklistCalvListView() {
               </Table>
             </Scrollbar>
           </TableContainer>
-
-          <Pagination
-            count={roundToNearestInteger(Number(dataFiltered.length) / Number(table.rowsPerPage))}
-            page={table.page + 1} // Pagination component in MUI uses 1-based index for page numbers
-            onChange={(event, newPage) => table.onChangePage(event, newPage - 1)} // Adjust for 0-based index
-            boundaryCount={1}
+          <Stack
             sx={{
-              my: 2,
-              mx: 1,
-              display: 'flex',
-              justifyContent: 'flex-end',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              margin: '16px',
             }}
-          />
+          >
+            {/* Bộ chọn số mục hiển thị mỗi trang */}
+            <FormControl variant="outlined" size="small">
+              <InputLabel>Số mục mỗi trang</InputLabel>
+              <Select
+                value={rowsPerPageCustom}
+                onChange={(event:any) => {
+                  setRowsPerPageCustom(Number(event.target.value));
+                  table.onChangeRowsPerPage(event); // Truyền trực tiếp event vào table.onChangeRowsPerPage
+                }}
+                label="Số mục mỗi trang"
+                style={{ width: '150px' }}
+              >
+                <MenuItem value={20}>20</MenuItem>
+                <MenuItem value={30}>30</MenuItem>
+                <MenuItem value={50}>50</MenuItem>
+              </Select>
+            </FormControl>
+
+            {/* Thành phần phân trang */}
+            <Pagination
+              count={Math.ceil(dataFiltered.length / rowsPerPageCustom)} // Số trang
+              page={table.page + 1} // Phân trang bắt đầu từ 1
+              onChange={(event, newPage) => table.onChangePage(event, newPage - 1)} // Điều chỉnh để bắt đầu từ 0
+              boundaryCount={2}
+              sx={{
+                my: 2,
+                mx: 1,
+                display: 'flex',
+                justifyContent: 'flex-end',
+              }}
+            />
+          </Stack>
         </Card>
       </Container>
 

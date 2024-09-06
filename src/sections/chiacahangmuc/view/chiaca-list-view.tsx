@@ -86,7 +86,6 @@ export default function ChiacaListView() {
   const accessToken = localStorage.getItem(STORAGE_KEY);
 
   const [filters, setFilters] = useState(defaultFilters);
-
   
   const { thietlapca } = useGetPhanCaByDuan();
 
@@ -139,7 +138,7 @@ export default function ChiacaListView() {
   const handleDeleteRow = useCallback(
     async (id: string) => {
       await axios
-        .put(`https://checklist.pmcweb.vn/demo/api/ent_giamsat/delete/${id}`, [], {
+        .put(`https://checklist.pmcweb.vn/demo/api/ent_thietlapca/delete/${id}`, [], {
           headers: {
             Accept: 'application/json',
             Authorization: `Bearer ${accessToken}`,
@@ -151,7 +150,11 @@ export default function ChiacaListView() {
           setTableData(deleteRow);
 
           table.onUpdatePageDeleteRow(dataInPage.length);
-          enqueueSnackbar('Xóa thành công!');
+          enqueueSnackbar({
+            variant: 'success',
+            autoHideDuration: 2000,
+            message: `Xóa thành công`,
+          });
         })
         .catch((error) => {
           if (error.response) {
@@ -308,9 +311,9 @@ export default function ChiacaListView() {
                   rowCount={tableData?.length}
                   numSelected={table.selected.length}
                   onSort={table.onSort}
-                  // onSelectAllRows={(checked) =>
-                  //   table.onSelectAllRows(checked, tableData?.map((row) => row.ID_ThietLapCa))
-                  // }
+                  onSelectAllRows={(checked) =>
+                    table.onSelectAllRows(checked, tableData?.map((row) => row.ID_ThietLapCa))
+                  }
                 />
 
                 <TableBody>
@@ -392,6 +395,7 @@ function applyFilter({
   filters: IKhuvucTableFilters;
   // dateError: boolean;
 }) {
+
   const { status, name } = filters;
 
   const stabilizedThis = inputData?.map((el, index) => [el, index] as const);
@@ -407,9 +411,14 @@ function applyFilter({
   if (name) {
     inputData = inputData?.filter(
       (order) =>
-        order.ent_calv.Tenca.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-        order.ent_calv.ent_khoicv.KhoiCV.toLowerCase().indexOf(name.toLowerCase()) !== -1
+        `${order?.ent_calv?.Tenca}`.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+        `${order?.Ngaythu}`?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+        `${order?.ent_calv?.ent_khoicv.KhoiCV}`.toLowerCase().indexOf(name.toLowerCase()) !== -1
     );
+  }
+
+  if (status !== 'all') {
+    inputData = inputData.filter((tbchecklist) => `${tbchecklist.ent_calv.ID_KhoiCV}` === `${status}`);
   }
 
   return inputData;

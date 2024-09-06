@@ -35,6 +35,7 @@ type Props = {
   onDeleteRow: VoidFunction;
   onQrRow: VoidFunction;
   khoiCV: IKhoiCV[];
+  index: number;
 };
 
 export default function AreaTableRow({
@@ -44,10 +45,10 @@ export default function AreaTableRow({
   onSelectRow,
   onDeleteRow,
   onQrRow,
-  khoiCV
+  khoiCV,
+  index,
 }: Props) {
-  const { ID_Khuvuc, ID_Hangmuc, Hangmuc, Tieuchuankt, MaQrCode, ent_khuvuc
-  } = row;
+  const { ID_Khuvuc, ID_Hangmuc, Hangmuc, Tieuchuankt, MaQrCode, ent_khuvuc } = row;
 
   const confirm = useBoolean();
 
@@ -74,14 +75,16 @@ export default function AreaTableRow({
 
   const shiftNames = ent_khuvuc.ent_khuvuc_khoicvs
     .map((calvId) => {
-      const workShift = khoiCV?.find((shift: any) => `${shift.ID_KhoiCV}` === `${calvId.ID_KhoiCV}`);
+      const workShift = khoiCV?.find(
+        (shift: any) => `${shift.ID_KhoiCV}` === `${calvId.ID_KhoiCV}`
+      );
       return workShift ? calvId.ent_khoicv.KhoiCV : null;
     })
     .filter((name) => name !== null);
 
-  const labels = shiftNames.map((name, index) => (
+  const labels = shiftNames.map((name, i) => (
     <Label
-      key={index}
+      key={i}
       variant="soft"
       color={
         (`${name}` === 'Khối làm sạch' && 'success') ||
@@ -89,14 +92,15 @@ export default function AreaTableRow({
         (`${name}` === 'Khối bảo vệ' && 'error') ||
         'default'
       }
-      style={{ marginTop: 4 }}
+      style={{ marginTop: 4, marginLeft: 4 }}
     >
       {name}
     </Label>
   ));
 
+  const backgroundColorStyle = index % 2 !== 0 ? '#f3f6f4' : '';
   const renderPrimary = (
-    <TableRow hover selected={selected}>
+    <TableRow hover selected={selected} style={{ backgroundColor: backgroundColorStyle }}>
       <TableCell padding="checkbox">
         <Checkbox checked={selected} onClick={onSelectRow} />
       </TableCell>
@@ -115,12 +119,10 @@ export default function AreaTableRow({
         </Box>
       </TableCell>
 
-      <TableCell>
-        {Hangmuc}
-      </TableCell>
-      <TableCell align="center"> {MaQrCode} </TableCell>
+      <TableCell>{Hangmuc}</TableCell>
+      <TableCell> {MaQrCode} </TableCell>
 
-      <TableCell align="center">
+      <TableCell>
         <ListItemText
           primary={ent_khuvuc?.Tenkhuvuc}
           secondary={ent_khuvuc?.ent_toanha?.Toanha}
@@ -131,9 +133,7 @@ export default function AreaTableRow({
           }}
         />{' '}
       </TableCell>
-      <TableCell>
-        {labels}
-      </TableCell>
+      <TableCell>{labels}</TableCell>
       <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
         <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
           <Iconify icon="eva:more-vertical-fill" />

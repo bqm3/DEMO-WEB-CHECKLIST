@@ -61,11 +61,11 @@ import TableHeadCustom from '../table-head-custom';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'ID_Hangmuc', label: 'Mã hạng mục', width: 150 },
+  { id: 'ID_Hangmuc', label: 'Mã', width: 80 },
   { id: 'Hangmuc', label: 'Tên hạng mục' },
-  { id: 'MaQrCode', label: 'Mã Qr Code', width: 150, align: 'center' },
-  { id: 'ID_Khuvuc', label: 'Khu vực', width: 200, align: 'center' },
-  { id: 'ID_KhoiCV', label: 'Khối công việc', width: 150, align: 'center' },
+  { id: 'MaQrCode', label: 'Mã Qr Code', width: 150 },
+  { id: 'ID_Khuvuc', label: 'Khu vực', width: 200 },
+  { id: 'ID_KhoiCV', label: 'Khối công việc', width: 250,  },
   { id: '', width: 88 },
 ];
 
@@ -467,9 +467,12 @@ export default function AreaListView() {
             <TableSelectedAction
               dense={table.dense}
               numSelected={table.selected.length}
-              rowCount={tableData?.length}
+              rowCount={dataInPage?.length}
               onSelectAllRows={(checked) =>
-                table.onSelectAllRows(checked, tableData?.map((row) => row?.ID_Hangmuc))
+                table.onSelectAllRows(
+                  checked,
+                  dataInPage.map((row) => row?.ID_Hangmuc)
+                )
               }
               action={
                 <Tooltip title="Delete">
@@ -490,7 +493,7 @@ export default function AreaListView() {
                   numSelected={table.selected.length}
                   onSort={table.onSort}
                   onSelectAllRows={(checked) =>
-                    table.onSelectAllRows(checked, tableData?.map((row) => row.ID_Hangmuc))
+                    table.onSelectAllRows(checked, dataInPage?.map((row) => row.ID_Hangmuc))
                   }
                 />
 
@@ -500,7 +503,7 @@ export default function AreaListView() {
                       table.page * table.rowsPerPage,
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
-                    .map((row) => (
+                    .map((row, index) => (
                       <OrderTableRow
                         key={row.ID_Hangmuc}
                         row={row}
@@ -510,6 +513,7 @@ export default function AreaListView() {
                         onViewRow={() => handleViewRow(row.ID_Hangmuc)}
                         onQrRow={() => handleQrRow(row)}
                         khoiCV={khoiCV}
+                        index={index}
                       />
                     ))}
 

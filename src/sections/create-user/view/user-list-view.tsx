@@ -68,13 +68,13 @@ import DuanTableFiltersResult from '../user-table-filters-result';
 const STATUS_OPTIONS = [{ value: 'all', label: 'Tất cả' }, ...PERMISSION_STATUS_OPTIONS];
 
 const TABLE_HEAD = [
-  { id: 'ID_User', label: 'Mã nhân viên', width: 140 },
-  { id: 'UserName', label: 'Tài khoản', width: 140 },
-  { id: 'Permission', label: 'Chức vụ', width: 140 },
-
-  { id: 'ID_Duan', label: 'Tên dự án', width: 140 },
-  { id: 'Email', label: 'Email', width: 140 },
-  { id: 'ID_KhoiCV', label: 'Khối công việc', width: 140 },
+  { id: 'ID_User', label: 'Mã ', width: 50 },
+  { id: 'UserName', label: 'Tài khoản', width: 150 },
+  { id: 'ID_Chucvu', label: 'Chức vụ', width: 150 },
+  { id: 'Hoten', label: 'Họ tên', width: 150 },
+  { id: 'Email', label: 'Email', width: 150 },
+  { id: 'Sodienthoai', label: 'Số điện thoại', width: 150 },
+  { id: 'ID_KhoiCV', label: 'Khối công việc', width: 150 },
   { id: '', width: 40 },
 ];
 
@@ -254,15 +254,18 @@ export default function GiamsatListView() {
                     ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
                   }
                   color={
-                    (tab.value === '1' && 'success') ||
-                    (tab.value === '2' && 'warning') ||
-                    (tab.value === '3' && 'error') ||
+                    (tab.value === '2' && 'success') ||
+                    (tab.value === '3' && 'warning') ||
+                    (tab.value === '4' && 'error') ||
                     'default'
                   }
                 >
                   {tab.value === 'all' && user?.length}
                   {tab.value === '2' &&
                     user?.filter((order) => `${order.ID_Chucvu}` === '2').length}
+
+                  {tab.value === '3' &&
+                    user?.filter((order) => `${order.ID_Chucvu}` === '3').length}
 
                   {tab.value === '4' &&
                     user?.filter((order) => `${order.ID_Chucvu}` === '4').length}

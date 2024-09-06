@@ -116,7 +116,7 @@ export default function CalvTableRow({
           <Iconify icon="solar:eye-bold" />
           Xem
         </MenuItem>
-        {/* <MenuItem
+        <MenuItem
           onClick={() => {
             confirm.onTrue();
             popover.onClose();
@@ -125,10 +125,10 @@ export default function CalvTableRow({
         >
           <Iconify icon="solar:trash-bin-trash-bold" />
           Xóa
-        </MenuItem> */}
+        </MenuItem>
       </CustomPopover>
 
-      {/* <ConfirmDialog
+      <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}
         title="PMC thông báo"
@@ -138,7 +138,7 @@ export default function CalvTableRow({
             Xóa
           </Button>
         }
-      /> */}
+      />
     </>
   );
 }

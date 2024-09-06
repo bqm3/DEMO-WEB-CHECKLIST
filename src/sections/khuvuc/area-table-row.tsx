@@ -39,6 +39,7 @@ type Props = {
   onQrRow: VoidFunction;
   onViewRow1: any;
   onQrRowHM: any;
+  index:number;
 };
 
 export default function AreaTableRow({
@@ -51,6 +52,7 @@ export default function AreaTableRow({
   onViewRow1,
   onQrRowHM,
   khoiCV,
+  index
 }: Props) {
   const {
     ID_Khuvuc,
@@ -105,9 +107,9 @@ export default function AreaTableRow({
     })
     .filter((name) => name !== null);
 
-  const labels = shiftNames.map((name, index) => (
+  const labels = shiftNames.map((name, i) => (
     <Label
-      key={index}
+      key={i}
       variant="soft"
       color={
         (`${name}` === 'Khối làm sạch' && 'success') ||
@@ -115,7 +117,7 @@ export default function AreaTableRow({
         (`${name}` === 'Khối bảo vệ' && 'error') ||
         'default'
       }
-      style={{ marginTop: 4 }}
+      style={{ marginTop: 4, marginLeft: 4 }}
     >
       {name}
     </Label>
@@ -127,11 +129,13 @@ export default function AreaTableRow({
     setQrHM(item);
   };
 
+  const backgroundColorStyle = index % 2 !== 0 ? '#f3f6f4' : '';
   const renderPrimary = (
-    <TableRow hover selected={selected}>
+    <TableRow hover selected={selected} style={{ backgroundColor: backgroundColorStyle }}>
       <TableCell padding="checkbox">
         <Checkbox checked={selected} onClick={onSelectRow} />
       </TableCell>
+
 
       <TableCell>
         <Box
@@ -147,11 +151,10 @@ export default function AreaTableRow({
         </Box>
       </TableCell>
 
-      <TableCell sx={{ display: 'flex', alignItems: 'center' }}>{Tenkhuvuc}</TableCell>
+      <TableCell>{Tenkhuvuc}</TableCell>
       <TableCell> {ent_toanha?.Toanha} </TableCell>
 
-      <TableCell align="center"> {MaQrCode} </TableCell>
-      <TableCell> {`${Makhuvuc}`}</TableCell>
+      <TableCell > {MaQrCode} </TableCell>
 
       <TableCell>{labels}</TableCell>
       <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>

@@ -87,7 +87,6 @@ export default function ChiaCaNewEditForm() {
   useEffect(() => {
     if (toanha.length > 0) {
       setToaNha(toanha);
-
     }
   }, [toanha]);
 
@@ -105,8 +104,10 @@ export default function ChiaCaNewEditForm() {
   const handleChangeKhoiCV = (event: any) => {
     const selectedKhoiCV = KhoiCV.find((item: any) => item.ID_KhoiCV === event.target.value);
     const arrChuky = ToaNha[0]?.ent_duan?.ent_duan_khoicv;
-    const chukyDetail = arrChuky?.filter((item: any) => `${event.target.value}` === `${item.ID_KhoiCV}`)
-    setChukyData(chukyDetail[0]?.Chuky || 0)
+    const chukyDetail = arrChuky?.filter(
+      (item: any) => `${event.target.value}` === `${item.ID_KhoiCV}`
+    );
+    setChukyData(chukyDetail[0]?.Chuky || 0);
 
     setOptionKhoiCV(selectedKhoiCV);
   };
@@ -124,11 +125,8 @@ export default function ChiaCaNewEditForm() {
     const {
       target: { value },
     } = event;
-    setOptionToaNha(
-      typeof value === 'string' ? value.split(',') : value
-    );
+    setOptionToaNha(typeof value === 'string' ? value.split(',') : value);
   };
-
 
   useEffect(() => {
     if (khuvuc) {
@@ -147,7 +145,7 @@ export default function ChiaCaNewEditForm() {
         )
       );
     }
-    if(optionToaNha) {
+    if (optionToaNha) {
       const filteredAreas = optionToaNha
         ? khuvuc.filter((kv) => optionToaNha.includes(kv.ID_Toanha))
         : khuvuc;
@@ -263,6 +261,7 @@ export default function ChiaCaNewEditForm() {
                 borderRadius={1}
               >
                 <FormControlLabel
+                  title={`${area.Tenkhuvuc} - ${area.ent_toanha.Toanha}`}
                   key={area.ID_Khuvuc}
                   label={`${area.Tenkhuvuc} - ${area.ent_toanha.Toanha}`}
                   control={
@@ -273,6 +272,12 @@ export default function ChiaCaNewEditForm() {
                       onChange={handleParentChange(areaIndex)}
                     />
                   }
+                  sx={{
+                    '.MuiFormControlLabel-label': {
+                      fontWeight: 'bold',
+                      fontSize: '17px',
+                    },
+                  }}
                 />
                 <div>
                   {area.ent_hangmuc.map((item, itemIndex) => (
