@@ -167,6 +167,12 @@ export const paths = {
       details: (id: string) => `${ROOTS.DASHBOARD}/phan-ca-hang-muc/${id}`,
       edit: (id: string) => `${ROOTS.DASHBOARD}/phan-ca-hang-muc/${id}/edit`,
     },
+    sucongoai: {
+      root: `${ROOTS.DASHBOARD}/su-co-ngoai`,
+      // new: `${ROOTS.DASHBOARD}/phan-ca-hang-muc/new`,
+      // details: (id: string) => `${ROOTS.DASHBOARD}/phan-ca-hang-muc/${id}`,
+      // edit: (id: string) => `${ROOTS.DASHBOARD}/phan-ca-hang-muc/${id}/edit`,
+    },
     chukyduan:  {
       root: `${ROOTS.DASHBOARD}/chu-ky-du-an`,
       new: `${ROOTS.DASHBOARD}/chu-ky-du-an/new`,

@@ -108,7 +108,6 @@ const KhuvucEditPage = lazy(() => import('src/pages/dashboard/khuvuc/edit'));
 // Tang
 const TangListsPage = lazy(() => import('src/pages/dashboard/tang/list'));
 const TangNewPage = lazy(() => import('src/pages/dashboard/tang/new'));
-// const TangEditPage = lazy(() => import('src/pages/dashboard/tang/edit'));
 
 // Hạng mục
 const HangMucListsPage = lazy(() => import('src/pages/dashboard/hangmuc/list'));
@@ -125,7 +124,10 @@ const ChukyDuanListsPage = lazy(() => import('src/pages/dashboard/chukyduan/list
 const ChukyDuanNewPage = lazy(() => import('src/pages/dashboard/chukyduan/new'));
 const ChukyDuanEditPage = lazy(() => import('src/pages/dashboard/chukyduan/edit'));
 
+// Sự cố
+const SuCoListsPage = lazy(() => import('src/pages/dashboard/sucongoai/list'));
 
+// Phân quyền checklist
 const QuanlyCaHangMucListsPage = lazy(() => import('src/pages/dashboard/phanquyenchecklist/list'));
 const QuanlyCaHangMucNewPage  = lazy(() => import('src/pages/dashboard/phanquyenchecklist/new'));
 const QuanlyCaHangMucEditPage = lazy(() => import('src/pages/dashboard/phanquyenchecklist/edit'));
@@ -280,7 +282,6 @@ export const dashboardRoutes = [
         children: [
           { element: <TangListsPage />, index: true },
           { path: 'list', element: <TangListsPage /> },
-          // { path: ':id/edit', element: <TangEditPage /> },
           { path: 'new', element: <TangNewPage /> },
         ],
       },
@@ -300,14 +301,13 @@ export const dashboardRoutes = [
           { path: 'profile', element: <UserAdminProfilePage /> },
         ],
       },
-      // {
-      //   path: 'quan-ly-giam-sat',
-      //   children: [
-      //     { element: <QuanlyGiamsatListsPage />, index: true },
-      //     { path: 'list', element: <QuanlyGiamsatListsPage /> },
-      //     { path: ':id/edit', element: <QuanlyGiamsatEditPage /> },
-      //   ],
-      // },
+      {
+        path: 'su-co-ngoai',
+        children: [
+          { element: <SuCoListsPage />, index: true },
+          { path: 'list', element: <SuCoListsPage /> },
+        ],
+      },
       {
         path: 'order-booking',
         children: [

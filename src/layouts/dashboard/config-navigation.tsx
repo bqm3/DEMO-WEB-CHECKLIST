@@ -61,7 +61,7 @@ export function useNavData() {
         items: (() => {
           if (!user) return [];
 
-          if (user.ID_Chucvu === 2) {
+          if (user.ID_Chucvu === 2 || user?.ID_Chucvu === 3) {
             return [
               {
                 title: t('analytics'),
@@ -91,7 +91,7 @@ export function useNavData() {
         subheader: t('management'),
 
         items:
-          user?.ID_Chucvu === 2 || user?.ID_Chucvu === 4
+          user?.ID_Chucvu === 2 || user?.ID_Chucvu === 3
             ? [
                 // KHU VUC
                 {
@@ -141,6 +141,14 @@ export function useNavData() {
                     { title: t('calamviec'), path: paths.dashboard.checklist.lists },
                   ],
                 },
+                {
+                  title: t('suco'),
+                  path: paths.dashboard.sucongoai.root,
+                  icon: ICONS.disabled,
+                  children: [
+                    { title: t('list'), path: paths.dashboard.sucongoai.root },
+                  ],
+                },
               ]
             : [],
       },
@@ -158,8 +166,7 @@ export function useNavData() {
       },
     ];
 
-    // Conditionally add "Tạo tài khoản" tab if user's role_id is 1
-    if (user?.ID_Chucvu === 2) {
+    if (user?.ID_Chucvu === 2 || user?.ID_Chucvu === 3) {
       navigationData[1].items.unshift(
         {
           title: t('building'),

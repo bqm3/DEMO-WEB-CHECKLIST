@@ -136,6 +136,22 @@ export type IUser = {
   ent_chucvu: IChucvu;
 };
 
+export type ISucongoai = {
+  ID_Suco: string;
+  ID_KV_CV: string;
+  ID_Hangmuc: string;
+  Ngaysuco: string;
+  Giosuco: string;
+  Noidungsuco: string;
+  Duongdancacanh: string;
+  ID_User: string;
+  Tinhtrangxuly: string;
+  Ngayxuly: string;
+  isDelete: string;
+  ent_hangmuc: IHangMuc;
+  ent_user: IUser;
+}
+
 export type IChucvu = {
   ID_Chucvu: string;
   Chucvu: string;

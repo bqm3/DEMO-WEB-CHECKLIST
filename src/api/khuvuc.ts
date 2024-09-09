@@ -1,5 +1,5 @@
 
-import { IKhuvuc, IToanha, IKhoiCV, IHangMuc, IChecklist, ICalv, E_Tang, IGiamsat, IChucvu, IDuan, IUser, ITang, ITbChecklist, TbChecklistCalv, IThietLapCa, IDuanKhoiCV } from 'src/types/khuvuc';
+import { IKhuvuc, IToanha, IKhoiCV, IHangMuc, IChecklist, ICalv, E_Tang, IGiamsat, IChucvu, IDuan, IUser, ITang, ITbChecklist, TbChecklistCalv, IThietLapCa, IDuanKhoiCV, ISucongoai } from 'src/types/khuvuc';
 // utils
 import { endpoints, fetcher } from 'src/utils/axios';
 import { useEffect, useMemo } from 'react';
@@ -858,7 +858,6 @@ export function useGetProfile(id: string){
   return memoizedValue;
 }
 
-
 export function useGetNhompb(){
   const URL = 'https://checklist.pmcweb.vn/pmc-assets/api/ent_nhompb/all';
   const fetCher = (url: string) =>
@@ -924,6 +923,33 @@ export function useGetChucVu(){
       chucvuLoading: isLoading,
       chucvuError: error,
       chucvuValidating: isValidating,
+    }),
+    [data, error, isLoading, isValidating]
+  );
+
+  return memoizedValue;
+}
+
+export function useGetSuCoNgoai() {
+  const accessToken = localStorage.getItem(STORAGE_KEY);
+  const URL = `https://checklist.pmcweb.vn/demo/api/tb_sucongoai/`;
+  const fetCher = (url: string) =>
+    fetch(url, {
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }).then((res) => res.json());
+  const { data, isLoading, error, isValidating } = useSWR(URL, fetCher);
+
+  const memoizedValue = useMemo(
+    () => ({
+      sucongoai: (data?.data as ISucongoai[]) || [],
+      sucongoaiLoading: isLoading,
+      sucongoaiError: error,
+      sucongoaiValidating: isValidating,
+      sucongoaiEmpty: !isLoading && !data?.length,
     }),
     [data, error, isLoading, isValidating]
   );
