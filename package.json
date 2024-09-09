@@ -5,16 +5,16 @@
   "description": "PMC",
   "private": true,
   "scripts": {
-    "start": "cross-env react-scripts start",
-    "build": "cross-env react-scripts build",
-    "eject": "cross-env react-scripts eject",
+    "start": "cross-env PORT=3636 react-scripts start",
+    "build": "cross-env PORT=3636 react-scripts build",
+    "eject": "cross-env PORT=3636 react-scripts eject",
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
     "lint:fix": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\"",
     "prettier": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
     "clear-all": "rm -rf node_modules .next out dist build",
-    "re-start": "rm -rf node_modules .next out dist build && yarn install && cross-env yarn start",
-    "re-build": "rm -rf node_modules .next out dist build && yarn install && cross-env yarn build",
-    "re-build-test": "rm -rf node_modules .next out dist build && npm install && cross-env npm run build"
+    "re-start": "rm -rf node_modules .next out dist build && yarn install && cross-env PORT=3636 yarn start",
+    "re-build": "rm -rf node_modules .next out dist build && yarn install && cross-env PORT=3636 yarn build",
+    "re-build-test": "rm -rf node_modules .next out dist build && npm install && cross-env PORT=3636 npm run build"
   },
   "eslintConfig": {
     "extends": [
@@ -59,7 +59,7 @@
     "apexcharts": "^3.42.0",
     "autosuggest-highlight": "^3.3.4",
     "axios": "^1.5.0",
-    "cross-env": "^7.0.3",
+    "cross-env PORT=3636": "^7.0.3",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.11",
     "expo-network": "^6.0.1",

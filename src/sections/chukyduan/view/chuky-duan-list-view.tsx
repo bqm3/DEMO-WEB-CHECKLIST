@@ -17,7 +17,13 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 // _mock
 import { _orders, ORDER_STATUS_OPTIONS, KHUVUC_STATUS_OPTIONS } from 'src/_mock';
-import { useGetKhuVuc, useGetHangMuc, useGetCalv, useGetKhoiCV, useGetChuKyDuAn } from 'src/api/khuvuc';
+import {
+  useGetKhuVuc,
+  useGetHangMuc,
+  useGetCalv,
+  useGetKhoiCV,
+  useGetChuKyDuAn,
+} from 'src/api/khuvuc';
 // utils
 import { fTimestamp } from 'src/utils/format-time';
 // hooks
@@ -41,7 +47,14 @@ import {
 } from 'src/components/table';
 import { useSnackbar } from 'src/components/snackbar';
 // types
-import { ICalv, IDuanKhoiCV, IHangMuc, IKhuvuc, IKhuvucTableFilters, IKhuvucTableFilterValue } from 'src/types/khuvuc';
+import {
+  ICalv,
+  IDuanKhoiCV,
+  IHangMuc,
+  IKhuvuc,
+  IKhuvucTableFilters,
+  IKhuvucTableFilterValue,
+} from 'src/types/khuvuc';
 //
 import CalvTableRow from '../chuky-duan-table-row';
 import CalvTableToolbar from '../chuky-duan-table-toolbar';
@@ -49,10 +62,9 @@ import CalvTableFiltersResult from '../chuky-duan-table-filters-result';
 
 // ----------------------------------------------------------------------
 
-
 const TABLE_HEAD = [
   { id: 'ID_Duan_KhoiCV', label: 'Mã', width: 150 },
-  { id: 'ID_Duan', label: 'Dự án',width: 150, },
+  { id: 'ID_Duan', label: 'Dự án', width: 150 },
   { id: 'Ngaybatdau', label: 'Ngày bắt đầu', width: 150 },
   { id: 'Chuky', label: 'Chu kỳ', width: 150 },
   { id: 'ID_KhoiCV', label: 'Khối làm việc', width: 150 },
@@ -90,13 +102,16 @@ export default function CalvListView() {
 
   const { khoiCV } = useGetKhoiCV();
 
-  const STATUS_OPTIONS = useMemo(() => [
-    { value: 'all', label: 'Tất cả' },
-    ...khoiCV.map(khoi => ({
-      value: khoi.ID_KhoiCV.toString(),
-      label: khoi.KhoiCV
-    }))
-  ], [khoiCV]);
+  const STATUS_OPTIONS = useMemo(
+    () => [
+      { value: 'all', label: 'Tất cả' },
+      ...khoiCV.map((khoi) => ({
+        value: khoi.ID_KhoiCV.toString(),
+        label: khoi.KhoiCV,
+      })),
+    ],
+    [khoiCV]
+  );
 
   useEffect(() => {
     if (duankhoicv?.length > 0) {
@@ -135,7 +150,7 @@ export default function CalvListView() {
   const handleDeleteRow = useCallback(
     async (id: string) => {
       await axios
-        .put(`https://checklist.pmcweb.vn/demo/api/ent_calv/delete/${id}`, [], {
+        .put(`https://checklist.pmcweb.vn/demo/api/ent_duan_khoicv/delete/${id}`, [], {
           headers: {
             Accept: 'application/json',
             Authorization: `Bearer ${accessToken}`,
@@ -209,15 +224,11 @@ export default function CalvListView() {
     <>
       <Container maxWidth={settings.themeStretch ? false : 'xl'}>
         <CustomBreadcrumbs
-          heading="Ca làm việc"
+          heading="Chu kỳ khối dự án"
           links={[
             {
               name: 'Dashboard',
               href: paths.dashboard.root,
-            },
-            {
-              name: 'Ca làm việc',
-              href: paths.dashboard.calv.root,
             },
             { name: 'Danh sách' },
           ]}
@@ -263,8 +274,6 @@ export default function CalvListView() {
                       duankhoicv?.filter((item) => `${item.ID_KhoiCV}` === '3').length}
                     {tab.value === '4' &&
                       duankhoicv?.filter((item) => `${item.ID_KhoiCV}` === '4').length}
-                       {tab.value === '5' &&
-                      duankhoicv?.filter((item) => `${item.ID_KhoiCV}` === '5').length}
                   </Label>
                 }
               />
@@ -415,8 +424,7 @@ function applyFilter({
 
   if (name) {
     inputData = inputData?.filter(
-      (order) =>
-        order?.ent_duan?.Duan?.toLowerCase().indexOf(name.toLowerCase()) !== -1 
+      (order) => order?.ent_duan?.Duan?.toLowerCase().indexOf(name.toLowerCase()) !== -1
     );
   }
 

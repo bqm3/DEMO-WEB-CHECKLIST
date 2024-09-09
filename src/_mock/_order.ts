@@ -21,7 +21,7 @@ export const KHUVUC_STATUS_OPTIONS = [
   { value: '1', label: 'Khối làm sạch' },
   { value: '2', label: 'Khối kỹ thuật' },
   { value: '3', label: 'Khối bảo vệ' },
-  { value: '4', label: 'Khối lễ tân' },
+  { value: '4', label: 'Khối dịch vụ' },
   // { value: 'refunded', label: 'Refunded' },
 ];
 
