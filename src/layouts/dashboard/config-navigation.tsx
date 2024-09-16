@@ -9,6 +9,7 @@ import Iconify from 'src/components/iconify';
 import SvgColor from 'src/components/svg-color';
 // auth
 import { useAuthContext } from 'src/auth/hooks';
+import { IUser } from 'src/types/khuvuc';
 
 // ----------------------------------------------------------------------
 
@@ -48,6 +49,19 @@ const ICONS = {
 };
 
 // ----------------------------------------------------------------------
+export function getRootPathByRole(u: IUser){
+  if (!u) return null;
+  switch (u.ID_Chucvu) {
+    case '1': // Admin
+      return paths.dashboard.general.analytics;
+    case '2': // Manager
+      return paths.dashboard.general.analytics;
+    case '5': // Analytics role
+      return paths.dashboard.general.management;
+    default:
+      return paths.dashboard.general.analytics; 
+  }
+};
 
 export function useNavData() {
   const { t } = useLocales();
@@ -229,6 +243,8 @@ export function useNavData() {
         }
       );
     }
+
+    
 
     return navigationData;
   }, [t, user]);

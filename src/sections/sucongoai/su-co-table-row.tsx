@@ -103,7 +103,7 @@ export default function AreaTableRow({
           }}
         />{' '}
       </TableCell>
-      <TableCell> {Ngayxuly} </TableCell>
+      <TableCell> {moment(Ngayxuly).format('DD-MM-YYYY')} </TableCell>
       <TableCell> {Noidungsuco} </TableCell>
       <TableCell>
         <Label
@@ -145,9 +145,9 @@ export default function AreaTableRow({
           }}
         >
           <Iconify icon="solar:eye-bold" />
-          Xem
+          Cập nhật
         </MenuItem>
-        <MenuItem
+        {/* <MenuItem
           onClick={() => {
             confirm.onTrue();
             popover.onClose();
@@ -156,7 +156,7 @@ export default function AreaTableRow({
         >
           <Iconify icon="solar:trash-bin-trash-bold" />
           Xóa
-        </MenuItem>
+        </MenuItem> */}
       </CustomPopover>
 
       <ConfirmDialog

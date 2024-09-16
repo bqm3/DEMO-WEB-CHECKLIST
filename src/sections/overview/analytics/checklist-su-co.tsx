@@ -30,9 +30,12 @@ interface Props extends CardProps {
   };
   selectedYear: string;
   selectedKhoiCV: string;
+  selectedTangGiam: string;
   onYearChange: (year: string) => void;
   onKhoiChange: (khoi: string) => void;
+  onTangGiamChange: (tg: string) => void;
   STATUS_OPTIONS: any;
+  tangGiam: any
 }
 
 export default function ChecklistYearStatistics({
@@ -41,34 +44,63 @@ export default function ChecklistYearStatistics({
   chart,
   selectedYear,
   selectedKhoiCV,
+  selectedTangGiam,
   onYearChange,
   onKhoiChange,
+  onTangGiamChange,
   STATUS_OPTIONS,
+  tangGiam,
   ...other
 }: Props) {
   const { categories, colors, series, options } = chart;
 
-  // Manage state for the year popover
   const yearPopover = usePopover();
-
-  // Manage state for the KhoiCV popover
   const khoiPopover = usePopover();
+  const tangGiamPopover = usePopover();
 
   const chartOptions = useChart({
-    colors,
+    // colors: ['#f1c232'], // Màu mặc định là vàng
     stroke: {
       show: true,
-      width: 2,
-      colors: ['transparent'],
+      width: 0,
+      // colors: ['#f1c232'],
+    },
+    dataLabels: {
+      enabled: true,
+      style: {
+        colors: ['#fff']
+      },
+      formatter: (val: any) => val.toFixed(0),
+    },
+    yaxis: {
+      title: {
+        text: 'Số lượng sự cố ngoài checklist',
+      },
+      labels: {
+        formatter: (val) => `${Math.round(val)}`,
+      },
     },
     xaxis: {
       categories,
     },
     tooltip: {
       y: {
-        formatter: (value: number) => `${value}`,
+        formatter: (val) => `${val}`,
       },
     },
+    // plotOptions: {
+    //   bar: {
+    //     colors: {
+    //       ranges: [
+    //         {
+    //           from: 10, // Nếu giá trị lớn hơn hoặc bằng 11
+    //           to: Infinity,
+    //           color: '#FF0000', // Màu đỏ
+    //         },
+    //       ],
+    //     },
+    //   },
+    // },
     ...options,
   });
 
@@ -88,6 +120,14 @@ export default function ChecklistYearStatistics({
     [khoiPopover, onKhoiChange]
   );
 
+  const handleChangeTangGiam = useCallback(
+    (newValue: string) => {
+      tangGiamPopover.onClose(); // Close the KhoiCV popover
+      onTangGiamChange(newValue);
+    },
+    [tangGiamPopover, onTangGiamChange]
+  );
+
   return (
     <>
       <Card {...other}>
@@ -95,7 +135,7 @@ export default function ChecklistYearStatistics({
           title={title}
           subheader={subheader}
           action={
-            <Box sx={{ gap: 2, display: 'flex' }}>
+            <Box sx={{ gap: 1, display: 'flex' }}>
               <ButtonBase
                 onClick={yearPopover.onOpen} // Open the year popover
                 sx={{
@@ -132,6 +172,7 @@ export default function ChecklistYearStatistics({
                   sx={{ ml: 0.5 }}
                 />
               </ButtonBase>
+              
             </Box>
           }
         />
@@ -161,6 +202,8 @@ export default function ChecklistYearStatistics({
           </MenuItem>
         ))}
       </CustomPopover>
+
+      
     </>
   );
 }

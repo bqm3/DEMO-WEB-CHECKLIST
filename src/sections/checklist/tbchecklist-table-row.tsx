@@ -70,7 +70,8 @@ export default function AreaTableRow({
     Anh4,
     ent_khoicv,
     ent_calv,
-    ent_user
+    ent_user,
+    ent_thietlapca
   } = row;
 
   const confirm = useBoolean();
@@ -86,22 +87,24 @@ export default function AreaTableRow({
 
   const renderPrimary = (
     <TableRow hover selected={selected}>
-      <TableCell sx={{ display: 'flex', alignItems: 'center' }}>{formattedDate}</TableCell>
+      <TableCell>{formattedDate}</TableCell>
 
-      <TableCell align="center"> {ent_user?.Hoten} </TableCell>
-      <TableCell align="center">
+      <TableCell> {ent_user?.Hoten} </TableCell>
+      <TableCell>
         {' '}
        {Tong}
       </TableCell>
 
-      <TableCell align="center">{Giobd}</TableCell>
-      <TableCell align='center'>{Giokt}</TableCell>
-      <TableCell align="center">
+      <TableCell>{Giobd} {Giokt ? `- ${Giokt}` : ''}</TableCell>
+      <TableCell>
         <Label variant="soft" color="secondary">
           {ent_calv?.Tenca}
         </Label>
       </TableCell>
-      <TableCell align="center">
+      <TableCell>
+          {ent_thietlapca?.Ngaythu ? `Ngày ${ent_thietlapca?.Ngaythu}` : ''}
+      </TableCell>
+      <TableCell>
         {' '}
         <Label
           variant="soft"
@@ -115,8 +118,8 @@ export default function AreaTableRow({
           {ent_khoicv.KhoiCV}
         </Label>
       </TableCell>
-
-      <TableCell align="center">
+      
+      <TableCell>
         {' '}
         <Label
           variant="soft"
@@ -127,6 +130,7 @@ export default function AreaTableRow({
           {`${Tinhtrang}` === '0' ? 'Đang mở' : 'Đã khóa'}
         </Label>
       </TableCell>
+     
       <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
         <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
           <Iconify icon="eva:more-vertical-fill" />

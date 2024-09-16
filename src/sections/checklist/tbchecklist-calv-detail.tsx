@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import axios from 'axios';
 import { CSVLink, CSVDownload } from 'react-csv';
+import moment from 'moment';
 // @mui
 import { alpha, styled } from '@mui/material/styles';
 import Label from 'src/components/label';
@@ -15,6 +16,7 @@ import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
 import Dialog from '@mui/material/Dialog';
+import { Box } from '@mui/material';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
@@ -63,14 +65,13 @@ import ChecklistTableFiltersResult from './detail/checklist-table-filters-result
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'Checklist', label: 'Tên checklist', width: 150, align: 'left' },
-  { id: 'ID_Hangmuc', label: 'Hạng mục', width: 150, align: 'center' },
-  { id: 'Maso', label: 'Mã số', width: 100, align: 'center' },
-  { id: 'Ketqua', label: 'Kết quả', width: 100, align: 'center' },
-  { id: 'Gioht', label: 'Giờ checklist', width: 100, align: 'center' },
-  { id: 'Anh', label: 'Ảnh', width: 100, align: 'center' },
-  { id: 'Ghichu', label: 'Ghi chú', width: 100, align: 'center' },
-
+  { id: 'Checklist', label: 'Tên checklist', width: 150 },
+  { id: 'ID_Hangmuc', label: 'Hạng mục (Khu vực- Tòa)', width: 250 },
+  { id: 'ID_Tang', label: 'Tầng', width: 100 },
+  { id: 'Ketqua', label: 'Kết quả', width: 100 },
+  { id: 'Gioht', label: 'Giờ Checklist', width: 100 },
+  { id: 'Anh', label: 'Hình ảnh', width: 100 },
+  { id: 'Ghichu', label: 'Ghi chú', width: 100 },
   { id: '', width: 88 },
 ];
 
@@ -258,6 +259,15 @@ export default function TbChecklistCalvListView({ currentChecklist, dataChecklis
     setDataFormatExcel(formattedData);
   }, [tableData]);
 
+  const formatDateString = (dateString: any) => {
+    if (dateString) {
+      const [year, month, day] = dateString.split('-');
+      return `${day}-${month}-${year}`;
+    }
+
+    return dateString;
+  };
+
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'xl'}>
@@ -290,6 +300,41 @@ export default function TbChecklistCalvListView({ currentChecklist, dataChecklis
             </Button>
           </CSVLink>
         </Stack>
+
+        <Box
+          rowGap={5}
+          display="grid"
+          alignItems="center"
+          gridTemplateColumns={{
+            xs: 'repeat(1, 1fr)',
+            sm: 'repeat(2, 1fr)',
+          }}
+          sx={{ pb: 2 }}
+        >
+          <Stack sx={{ typography: 'body2' }}>
+            <Typography variant="subtitle2" sx={{ mb: 1 }}>
+              Thông tin trong ca
+            </Typography>
+            Ca: {dataChecklistC?.ent_calv?.Tenca}
+            <br />
+            Người Checklist: {dataChecklistC?.ent_user?.Hoten}
+            <br />
+            Khối công việc: {dataChecklistC?.ent_khoicv?.KhoiCV}
+            <br />
+          </Stack>
+
+          <Stack sx={{ typography: 'body2' }}>
+            <Typography variant="subtitle2" sx={{ mb: 1 }}>
+              Thông tin trong ca
+            </Typography>
+            Ngày: {formatDateString(dataChecklistC?.Ngay)}
+            <br />
+            Giờ bắt đầu - kết thúc: {dataChecklistC?.Giobd} {dataChecklistC?.Giokt}
+            <br />
+            Tình trạng: {dataChecklistC?.Tinhtrang === 0 ? 'Mở ra' : 'Đóng ca'}
+            <br />
+          </Stack>
+        </Box>
         <Card>
           <ChecklistTableToolbar
             filters={filters}
@@ -467,13 +512,16 @@ function applyFilter({
     inputData = inputData.filter(
       (checklist) =>
         `${checklist.ent_checklist.Checklist}`.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-        `${checklist.ent_checklist.Maso}`.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+        `${checklist.ent_checklist.ent_khuvuc.Tenkhuvuc}`
+          .toLowerCase()
+          .indexOf(name.toLowerCase()) !== -1 ||
         `${checklist.ent_checklist.ent_hangmuc.Hangmuc}`
           .toLowerCase()
           .indexOf(name.toLowerCase()) !== -1 ||
-        `${checklist.ent_checklist.ent_hangmuc.ent_khuvuc.Tenkhuvuc}`
-          .toLowerCase()
-          .indexOf(name.toLowerCase()) !== -1
+        `${checklist.ent_checklist.ent_tang.Tentang}`.toLowerCase().indexOf(name.toLowerCase()) !==
+          -1 ||
+        `${checklist.Gioht}`.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+        `${checklist.Ghichu}`.toLowerCase().indexOf(name.toLowerCase()) !== -1
     );
   }
 

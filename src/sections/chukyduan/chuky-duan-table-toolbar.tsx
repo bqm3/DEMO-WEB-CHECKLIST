@@ -82,7 +82,7 @@ export default function OrderTableToolbar({
             fullWidth
             value={filters.name}
             onChange={handleFilterName}
-            placeholder="Tìm kiếm theo tên ca..."
+            placeholder="Tìm kiếm theo tên dự án..."
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">

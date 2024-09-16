@@ -2,7 +2,6 @@
 import { paramCase } from 'src/utils/change-case';
 import { _id, _postTitles } from 'src/_mock/assets';
 import { IUser } from 'src/types/khuvuc';
-
 // ----------------------------------------------------------------------
 
 const MOCK_ID = _id[1];
@@ -16,7 +15,6 @@ const ROOTS = {
 };
 
 // ----------------------------------------------------------------------
-
 
 export const paths = {
   

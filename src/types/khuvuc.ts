@@ -5,7 +5,7 @@ export type IRoomFilters = {
   services: string[];
 };
 
-export type IKhuvucTableFilterValue = string | null;
+export type IKhuvucTableFilterValue = string | null | [] | string[];
 
 export type IKhuvucTableFilters = {
   name: string;
@@ -13,6 +13,14 @@ export type IKhuvucTableFilters = {
   startDate: Date | null;
   endDate: Date | null;
 };
+
+export type IChecklistTableFilters ={
+  name: string;
+  status: string;
+  startDate: Date | null;
+  endDate: Date | null;
+  building: string[]
+}
 
 export type IBaoCaoTableFilterValue = string | null | string[] | Date;
 
@@ -87,6 +95,7 @@ export type IDuan = {
   toanhas: IToanha[];
   ent_nhom: INhom;
   ent_duan_khoicv: IDuanKhoiCV[]
+  
 };
 
 export type IGiamsat = {
@@ -109,6 +118,7 @@ export type IThietLapCa = {
   ID_ThietLapCa: string;
   Ngaythu: string;
   ID_Calv: string;
+  Sochecklist: string;
   ID_Hangmucs: string;
   ID_Duan: string;
   isDelte: string;
@@ -194,6 +204,7 @@ export type IKhuvuc = {
   ent_toanha: E_Toanha;
   hangMucLength: string;
   ent_hangmuc: IHangMuc[];
+  KhoiCVs: IKhoiCV[]
 };
 
 export type IToanha = {
@@ -206,6 +217,7 @@ export type IToanha = {
   ent_duan: E_Duan;
   khuvuc: IKhuvuc;
   ent_khuvuc: IKhuvuc[];
+  tenKhois: string[];
 };
 
 export type IKhoiCV = {

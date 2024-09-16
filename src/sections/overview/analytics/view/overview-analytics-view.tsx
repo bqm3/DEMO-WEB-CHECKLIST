@@ -7,7 +7,9 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { LoadingButton } from '@mui/lab';
 // hooks
+import { paths } from 'src/routes/paths';
 import { useAuthContext } from 'src/auth/hooks';
+import { useRouter } from 'src/routes/hooks';
 import { useBoolean } from 'src/hooks/use-boolean';
 // components
 import Iconify from 'src/components/iconify';
@@ -22,7 +24,10 @@ import AppCurrentDownload from '../app-current-download';
 import BankingRecentTransitions from '../banking-recent-transitions';
 import ChecklistRecentTransitions from '../checklist-recent-transitions';
 
-import ChecklistsYear from '../checklist-yearly';
+import ChecklistsHoanThanh from '../checklist-hoan-thanh';
+import ChecklistsSuCo from '../checklist-su-co';
+import ChecklistsSuCoNgoai from '../checklist-su-co-ngoai';
+
 import EcommerceSalesOverview from '../checklist-percent-overview';
 
 // ----------------------------------------------------------------------
@@ -61,326 +66,425 @@ type ChartData = {
   series: ChartSeries[];
 };
 
-// export default function OverviewAnalyticsView() {
-//   const theme = useTheme();
-
-//   const settings = useSettingsContext();
-
-//   const { user, logout } = useAuthContext();
-
-//   const accessToken = localStorage.getItem(STORAGE_KEY);
-
-//   const upload = useBoolean();
-
-//   const [loading, setLoading] = useState<Boolean | any>(false);
-
-//   const [dataTotalKhoiCV, setDataTotalKhoiCV] = useState<SeriesData[]>([]);
-//   const [dataTotalKhuvuc, setDataTotalKhuvuc] = useState<SeriesData[]>([]);
-//   const [dataTotalHangmuc, setDataTotalHangmuc] = useState<SeriesData[]>([]);
-//   const [dataTotalErrorWeek, setDataTotalErrorWeek] = useState<any>([]);
-//   const [dataChecklistsError, setDataChecklistsError] = useState<any>([]);
-//   const [dataPercent, setDataPercent] = useState<any>([]);
-//   const [totalKhoiCV, setTotalKhoiCV] = useState(0);
-//   const [dataTotalYear, setDataTotalYear] = useState<ChartData>({ categories: [], series: [] });
-//   const [selectedYear, setSelectedYear] = useState('2024');
-//   const [selectedKhoiCV, setSelectedKhoiCV] = useState('all');
-
-//   const { khoiCV } = useGetKhoiCV();
-//   const [STATUS_OPTIONS, set_STATUS_OPTIONS] = useState([{ value: 'all', label: 'Tất cả' }]);
-
-//   useEffect(() => {
-//     // Assuming khoiCV is set elsewhere in your component
-//     khoiCV.forEach((khoi) => {
-//       set_STATUS_OPTIONS((prevOptions) => [
-//         ...prevOptions,
-//         { value: khoi.ID_KhoiCV.toString(), label: khoi.KhoiCV },
-//       ]);
-//     });
-//   }, [khoiCV]);
-
-//   useEffect(() => {
-//     const handleTotalKhoiCV = async () => {
-//       await axios
-//         .get('https://checklist.pmcweb.vn/demo/api/ent_checklist/total', {
-//           headers: {
-//             'Content-Type': 'application/json',
-//             Authorization: `Bearer ${accessToken}`,
-//           },
-//         })
-//         .then((res) => {
-//           setDataTotalKhoiCV(res.data.data);
-//         })
-//         .catch((err) => console.log('err', err));
-//     };
-
-//     handleTotalKhoiCV();
-//   }, [accessToken]);
-
-//   useEffect(() => {
-//     const handleTotalKhuvuc = async () => {
-//       await axios
-//         .get('https://checklist.pmcweb.vn/demo/api/ent_khuvuc/total', {
-//           headers: {
-//             'Content-Type': 'application/json',
-//             Authorization: `Bearer ${accessToken}`,
-//           },
-//         })
-//         .then((res) => {
-//           setDataTotalKhuvuc(res.data.data);
-//         })
-//         .catch((err) => console.log('err', err));
-//     };
-
-//     handleTotalKhuvuc();
-//   }, [accessToken]);
-
-//   useEffect(() => {
-//     const handleTotalKhuvuc = async () => {
-//       await axios
-//         .get('https://checklist.pmcweb.vn/demo/api/tb_checklistc/list-checklist-error-project', {
-//           headers: {
-//             'Content-Type': 'application/json',
-//             Authorization: `Bearer ${accessToken}`,
-//           },
-//         })
-//         .then((res) => {
-//           setDataTotalErrorWeek(res.data.data[0].errorDetails);
-//         })
-//         .catch((err) => console.log('err', err));
-//     };
-
-//     handleTotalKhuvuc();
-//   }, [accessToken]);
-
-//   useEffect(() => {
-//     const handleTotalKhuvuc = async () => {
-//       await axios
-//         .get('https://checklist.pmcweb.vn/demo/api/tb_checklistc/list-checklist', {
-//           headers: {
-//             'Content-Type': 'application/json',
-//             Authorization: `Bearer ${accessToken}`,
-//           },
-//         })
-//         .then((res) => {
-//           setDataChecklistsError(res.data.data);
-//         })
-//         .catch((err) => console.log('err', err));
-//     };
-
-//     handleTotalKhuvuc();
-//   }, [accessToken]);
-
-//   useEffect(() => {
-//     const handleTotalHangmuc = async () => {
-//       await axios
-//         .get('https://checklist.pmcweb.vn/demo/api/ent_hangmuc/total', {
-//           headers: {
-//             'Content-Type': 'application/json',
-//             Authorization: `Bearer ${accessToken}`,
-//           },
-//         })
-//         .then((res) => {
-//           setDataTotalHangmuc(res.data.data);
-//         })
-//         .catch((err) => console.log('err', err));
-//     };
-
-//     handleTotalHangmuc();
-//   }, [accessToken]);
-
-//   useEffect(() => {
-//     const handlePercent = async () => {
-//       await axios
-//         .get('https://checklist.pmcweb.vn/demo/api/tb_checklistc/percent', {
-//           headers: {
-//             'Content-Type': 'application/json',
-//             Authorization: `Bearer ${accessToken}`,
-//           },
-//         })
-//         .then((res) => {
-//           setDataPercent(res.data.data);
-//         })
-//         .catch((err) => console.log('err', err));
-//     };
-
-//     handlePercent();
-//   }, [accessToken]);
-
-//   useEffect(() => {
-//     const handleTotalKhoiCV = async () => {
-//       await axios
-//         .get(
-//           `https://checklist.pmcweb.vn/demo/api/tb_checklistc/year?year=${selectedYear}&khoi=${selectedKhoiCV}`,
-//           {
-//             headers: {
-//               'Content-Type': 'application/json',
-//               Authorization: `Bearer ${accessToken}`,
-//             },
-//           }
-//         )
-//         .then((res) => {
-//           setDataTotalYear(res.data.data);
-//         })
-//         .catch((err) => console.log('err', err));
-//     };
-
-//     handleTotalKhoiCV();
-//   }, [accessToken, selectedYear, selectedKhoiCV]);
-
-//   useEffect(() => {
-//     const totalValue = dataTotalKhoiCV.reduce(
-//       (accumulator, currentObject) => accumulator + currentObject.value,
-//       0
-//     );
-//     setTotalKhoiCV(totalValue);
-//   }, [dataTotalKhoiCV]);
-
-//   const handleLinkHSSE = useCallback(()=> {
-//     const url = "https://pmcwebvn.sharepoint.com/sites/PMCteam/SitePages/B%C3%A1o-c%C3%A1o-HSSE.aspx?csf=1&web=1&share=EUBekLeeP6hLszUcIm2kXQEBm6ZHozG95Gn14yIxExnPFw&e=HsaK0H";
-//     window.open(url, '_blank');
-//   },[])
-
-//   return (
-//     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
-//       <Grid
-//         container
-//         direction="row"
-//         alignItems="center"
-//         justifyContent="space-between"
-//         sx={{
-//           mb: { xs: 3, md: 5 },
-//         }}
-//       >
-//         <Typography variant="h4">Hi, {user?.ent_duan?.Duan}</Typography>
-//         <LoadingButton
-//           loading={loading}
-//           variant="contained"
-//           startIcon={<Iconify icon="eva:link-2-fill" />}
-//           onClick={handleLinkHSSE}
-//         >
-//           Báo cáo HSSE
-//         </LoadingButton>
-//       </Grid>
-//       <Grid container spacing={3}>
-//         <Grid xs={12} md={12} lg={12}>
-//           {dataTotalErrorWeek && (
-//             <BankingRecentTransitions
-//               title="Sự cố ngày hôm trước"
-//               tableData={dataTotalErrorWeek}
-//               tableLabels={[
-//                 { id: 'checklistName', label: 'Tên checklist' },
-//                 { id: 'Ngay', label: 'Ngày' },
-//                 { id: 'calv', label: 'Ca làm việc' },
-//                 { id: 'note', label: 'Ghi chú' },
-//                 { id: 'Giamsat', label: 'Giám sát' },
-//                 { id: 'image', label: 'Ảnh' },
-//                 { id: '' },
-//               ]}
-//             />
-//           )}
-//         </Grid>
-
-//         <Grid xs={12} md={12} lg={12}>
-//           {dataTotalErrorWeek && (
-//             <ChecklistRecentTransitions
-//               title="Các checklist lỗi"
-//               tableData={dataChecklistsError}
-//               tableLabels={[
-//                 { id: 'checklistName', label: 'Tên checklist' },
-//                 { label: 'Giá trị định danh', id: 'Giatridinhdanh' },
-//                 { label: 'Giá trị nhận', id: 'Giatrinhan' },
-//                 { label: 'Tầng', id: 'Tentang' },
-//                 { label: 'Số thứ tự', id: 'Sothutu' },
-//                 { label: 'Mã số', id: 'Maso' },
-//                 { label: 'Hạng mục', id: 'Hangmuc' },
-//               ]}
-//             />
-//           )}
-//         </Grid>
-
-//         {dataTotalKhuvuc && (
-//           <Grid xs={12} md={6} lg={4}>
-//             <AppCurrentDownload
-//               title="Khai báo khu vực"
-//               chart={{
-//                 series: dataTotalKhuvuc,
-//                 colors: [
-//                   'rgb(0, 167, 111)',
-//                   'rgb(255, 171, 0)',
-//                   'rgb(255, 86, 48)',
-//                   'rgb(0, 184, 217)',
-//                 ],
-//               }}
-//             />
-//           </Grid>
-//         )}
-
-//         {dataTotalHangmuc && (
-//           <Grid xs={12} md={6} lg={4}>
-//             <AppCurrentDownload
-//               title="Khai báo hạng mục"
-//               chart={{
-//                 series: dataTotalHangmuc,
-//                 colors: [
-//                   'rgb(0, 167, 111)',
-//                   'rgb(255, 171, 0)',
-//                   'rgb(255, 86, 48)',
-//                   'rgb(0, 184, 217)',
-//                 ],
-//               }}
-//             />
-//           </Grid>
-//         )}
-
-//         <Grid xs={12} md={6} lg={4}>
-//           {dataTotalKhoiCV && (
-//             <AnalyticsCurrentVisits
-//               title={`Khai báo Checklists: ${totalKhoiCV}`}
-//               chart={{
-//                 series: dataTotalKhoiCV,
-//                 colors: [
-//                   'rgb(0, 167, 111)',
-//                   'rgb(255, 171, 0)',
-//                   'rgb(255, 86, 48)',
-//                   'rgb(0, 184, 217)',
-//                 ],
-//               }}
-//             />
-//           )}
-//         </Grid>
-
-//         <Grid xs={12} md={8} lg={8}>
-//           <ChecklistsYear
-//             title="Số lượng checklist"
-//             subheader="Hoàn thành checklist theo ca"
-//             chart={{
-//               categories: dataTotalYear.categories,
-//               series: dataTotalYear.series,
-//             }}
-//             selectedYear={selectedYear} // Pass selected year as prop
-//             onYearChange={setSelectedYear}
-//             selectedKhoiCV={selectedKhoiCV}
-//             onKhoiChange={setSelectedKhoiCV}
-//             STATUS_OPTIONS={STATUS_OPTIONS}
-//           />
-//         </Grid>
-
-//         <Grid xs={12} md={4} lg={4}>
-//           <EcommerceSalesOverview title="Tỉ lệ checklist" data={dataPercent} />
-//         </Grid>
-
-//         {/* <Grid xs={12} md={6} lg={6}>
-//           <EcommerceSalesOverview title="Hạng mục lỗi" data={_ecommerceSalesOverview} />
-//         </Grid> */}
-//       </Grid>
-//     </Container>
-//   );
-// }
+const tangGiam = [
+  { value: 'desc', label: 'Giảm' },
+  { value: 'asc', label: 'Tăng' },
+];
 
 export default function OverviewAnalyticsView() {
-  return (
-   <>
+  const theme = useTheme();
+  const router = useRouter();
+  const settings = useSettingsContext();
 
-   </>
-  )
+  const { user, logout } = useAuthContext();
+
+  const accessToken = localStorage.getItem(STORAGE_KEY);
+
+  const upload = useBoolean();
+
+  const [loading, setLoading] = useState<Boolean | any>(false);
+
+  const [dataTotalKhoiCV, setDataTotalKhoiCV] = useState<SeriesData[]>([]);
+  const [dataTotalKhuvuc, setDataTotalKhuvuc] = useState<SeriesData[]>([]);
+  const [dataTotalHangmuc, setDataTotalHangmuc] = useState<SeriesData[]>([]);
+  const [dataTotalErrorWeek, setDataTotalErrorWeek] = useState<any>([]);
+  const [dataChecklistsError, setDataChecklistsError] = useState<any>([]);
+  const [dataPercent, setDataPercent] = useState<any>([]);
+  const [totalKhoiCV, setTotalKhoiCV] = useState(0);
+  const [dataTotalYear, setDataTotalYear] = useState<ChartData>({ categories: [], series: [] });
+  const [dataTotalYearSuCo, setDataTotalYearSuCo] = useState<ChartData>({
+    categories: [],
+    series: [],
+  });
+  const [dataTotalYearSuCoNgoai, setDataTotalYearSuCoNgoai] = useState<ChartData>({
+    categories: [],
+    series: [],
+  });
+
+  const [selectedYear, setSelectedYear] = useState('2024');
+  const [selectedKhoiCV, setSelectedKhoiCV] = useState('all');
+  const [selectedTangGiam, setSelectedTangGiam] = useState('asc');
+
+  const [selectedYearSuCoNgoai, setSelectedYearSuCoNgoai] = useState('2024');
+  const [selectedKhoiCVSuCoNgoai, setSelectedKhoiCVSuCoNgoai] = useState('all');
+  const [selectedTangGiamSuCoNgoai, setSelectedTangGiamSuCoNgoai] = useState('asc');
+
+  const [selectedYearSuCo, setSelectedYearSuCo] = useState('2024');
+  const [selectedKhoiCVSuCo, setSelectedKhoiCVSuCo] = useState('all');
+  const [selectedTangGiamSuCo, setSelectedTangGiamSuCo] = useState('asc');
+
+  const { khoiCV } = useGetKhoiCV();
+  const [STATUS_OPTIONS, set_STATUS_OPTIONS] = useState([{ value: 'all', label: 'Tất cả' }]);
+
+  useEffect(() => {
+    // Assuming khoiCV is set elsewhere in your component
+    khoiCV.forEach((khoi) => {
+      set_STATUS_OPTIONS((prevOptions) => [
+        ...prevOptions,
+        { value: khoi.ID_KhoiCV.toString(), label: khoi.KhoiCV },
+      ]);
+    });
+  }, [khoiCV]);
+
+  useEffect(() => {
+    if (user && `${user.ID_Chucvu}` === '5') {
+      router.push(paths.dashboard.general.management);
+    }
+  }, [user, router]);
+
+  useEffect(() => {
+    const handleTotalKhoiCV = async () => {
+      await axios
+        .get('https://checklist.pmcweb.vn/demo/api/ent_checklist/total', {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        .then((res) => {
+          setDataTotalKhoiCV(res.data.data);
+        })
+        .catch((err) => console.log('err', err));
+    };
+
+    handleTotalKhoiCV();
+  }, [accessToken]);
+
+  useEffect(() => {
+    const handleTotalKhuvuc = async () => {
+      await axios
+        .get('https://checklist.pmcweb.vn/demo/api/ent_khuvuc/total', {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        .then((res) => {
+          setDataTotalKhuvuc(res.data.data);
+        })
+        .catch((err) => console.log('err', err));
+    };
+
+    handleTotalKhuvuc();
+  }, [accessToken]);
+
+  useEffect(() => {
+    const handleTotalKhuvuc = async () => {
+      await axios
+        .get('https://checklist.pmcweb.vn/demo/api/tb_checklistc/list-checklist-error-project', {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        .then((res) => {
+          setDataTotalErrorWeek(res.data.data[0].errorDetails);
+        })
+        .catch((err) => console.log('err', err));
+    };
+
+    handleTotalKhuvuc();
+  }, [accessToken]);
+
+  useEffect(() => {
+    const handleTotalKhuvuc = async () => {
+      await axios
+        .get('https://checklist.pmcweb.vn/demo/api/tb_checklistc/list-checklist', {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        .then((res) => {
+          setDataChecklistsError(res.data.data);
+        })
+        .catch((err) => console.log('err', err));
+    };
+
+    handleTotalKhuvuc();
+  }, [accessToken]);
+
+  useEffect(() => {
+    const handleTotalHangmuc = async () => {
+      await axios
+        .get('https://checklist.pmcweb.vn/demo/api/ent_hangmuc/total', {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        .then((res) => {
+          setDataTotalHangmuc(res.data.data);
+        })
+        .catch((err) => console.log('err', err));
+    };
+
+    handleTotalHangmuc();
+  }, [accessToken]);
+
+  useEffect(() => {
+    const handlePercent = async () => {
+      await axios
+        .get('https://checklist.pmcweb.vn/demo/api/tb_checklistc/percent', {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        .then((res) => {
+          setDataPercent(res.data.data);
+        })
+        .catch((err) => console.log('err', err));
+    };
+
+    handlePercent();
+  }, [accessToken]);
+
+  useEffect(() => {
+    const handleTangGiam = async () => {
+      await axios
+        .get(
+          `https://checklist.pmcweb.vn/demo/api/tb_checklistc/year?year=${selectedYear}&khoi=${selectedKhoiCV}&tangGiam=${selectedTangGiam}`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        )
+        .then((res) => {
+          setDataTotalYear(res.data.data);
+        })
+        .catch((err) => console.log('err', err));
+    };
+
+    handleTangGiam();
+  }, [accessToken, selectedYear, selectedKhoiCV, selectedTangGiam]);
+
+  // Checklikst lỗi
+  useEffect(() => {
+    const handleTangGiam = async () => {
+      await axios
+        .get(
+          `https://checklist.pmcweb.vn/demo/api/tb_checklistc/year-su-co?year=${selectedYearSuCo}&khoi=${selectedKhoiCVSuCo}`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        )
+        .then((res) => {
+          setDataTotalYearSuCo(res.data.data);
+        })
+        .catch((err) => console.log('err', err));
+    };
+
+    handleTangGiam();
+  }, [accessToken, selectedYearSuCo, selectedKhoiCVSuCo, selectedTangGiamSuCo]);
+
+  // Sự cố ngoài
+  useEffect(() => {
+    const handleTangGiam = async () => {
+      await axios
+        .get(
+          `https://checklist.pmcweb.vn/demo/api/tb_sucongoai/dashboard-by-duan?year=${selectedYearSuCoNgoai}&khoi=${selectedKhoiCVSuCoNgoai}`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        )
+        .then((res) => {
+          setDataTotalYearSuCoNgoai(res.data.data);
+        })
+        .catch((err) => console.log('err', err));
+    };
+
+    handleTangGiam();
+  }, [accessToken, selectedYearSuCoNgoai, selectedKhoiCVSuCoNgoai, selectedTangGiamSuCoNgoai]);
+
+  useEffect(() => {
+    const totalValue = dataTotalKhoiCV.reduce(
+      (accumulator, currentObject) => accumulator + currentObject.value,
+      0
+    );
+    setTotalKhoiCV(totalValue);
+  }, [dataTotalKhoiCV]);
+
+  const handleLinkHSSE = useCallback(() => {
+    const url =
+      'https://pmcwebvn.sharepoint.com/sites/PMCteam/SitePages/B%C3%A1o-c%C3%A1o-HSSE.aspx?csf=1&web=1&share=EUBekLeeP6hLszUcIm2kXQEBm6ZHozG95Gn14yIxExnPFw&e=HsaK0H';
+    window.open(url, '_blank');
+  }, []);
+
+  return (
+    <Container maxWidth={settings.themeStretch ? false : 'xl'}>
+      <Grid
+        container
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{
+          mb: { xs: 3, md: 5 },
+        }}
+      >
+        <Typography variant="h4">Hi, {user?.ent_duan?.Duan}</Typography>
+        <LoadingButton
+          loading={loading}
+          variant="contained"
+          startIcon={<Iconify icon="eva:link-2-fill" />}
+          onClick={handleLinkHSSE}
+        >
+          Báo cáo HSSE
+        </LoadingButton>
+      </Grid>
+      <Grid container spacing={3}>
+        <Grid xs={12} md={12} lg={12}>
+          {dataTotalErrorWeek && (
+            <BankingRecentTransitions
+              title="Sự cố ngày hôm trước"
+              tableData={dataTotalErrorWeek}
+              tableLabels={[
+                { id: 'checklistName', label: 'Tên checklist' },
+                { id: 'Ngay', label: 'Ngày' },
+                { id: 'calv', label: 'Ca làm việc' },
+                { id: 'note', label: 'Ghi chú' },
+                { id: 'Giamsat', label: 'Giám sát' },
+                { id: 'image', label: 'Ảnh' },
+                { id: '' },
+              ]}
+            />
+          )}
+        </Grid>
+
+        <Grid xs={12} md={12} lg={12}>
+          {dataTotalErrorWeek && (
+            <ChecklistRecentTransitions
+              title="Các checklist lỗi"
+              tableData={dataChecklistsError}
+              tableLabels={[
+                { id: 'checklistName', label: 'Tên checklist' },
+                { label: 'Giá trị định danh', id: 'Giatridinhdanh' },
+                { label: 'Giá trị nhận', id: 'Giatrinhan' },
+                { label: 'Tầng', id: 'Tentang' },
+                { label: 'Số thứ tự', id: 'Sothutu' },
+                { label: 'Mã số', id: 'Maso' },
+                { label: 'Hạng mục', id: 'Hangmuc' },
+              ]}
+            />
+          )}
+        </Grid>
+
+        <Grid xs={12} md={12} lg={12}>
+          <ChecklistsHoanThanh
+            title="Tỉ lệ hoàn thành checklist "
+            subheader="Hoàn thành checklist theo ca"
+            chart={{
+              categories: dataTotalYear?.categories,
+              series: dataTotalYear?.series,
+            }}
+            selectedYear={selectedYear}
+            selectedKhoiCV={selectedKhoiCV}
+            selectedTangGiam={selectedTangGiam}
+            onYearChange={setSelectedYear}
+            onTangGiamChange={setSelectedTangGiam}
+            onKhoiChange={setSelectedKhoiCV}
+            STATUS_OPTIONS={STATUS_OPTIONS}
+            tangGiam={tangGiam}
+          />
+        </Grid>
+
+        <Grid xs={12} md={12} lg={12}>
+          <ChecklistsSuCo
+            title="Sự cố checklist "
+            subheader="Số lượng sự cố"
+            chart={{
+              categories: dataTotalYearSuCo?.categories,
+              series: dataTotalYearSuCo?.series,
+            }}
+            selectedYear={selectedYearSuCo}
+            selectedKhoiCV={selectedKhoiCVSuCo}
+            selectedTangGiam={selectedTangGiamSuCo}
+            onYearChange={setSelectedYearSuCo}
+            onTangGiamChange={setSelectedTangGiamSuCo}
+            onKhoiChange={setSelectedKhoiCVSuCo}
+            STATUS_OPTIONS={STATUS_OPTIONS}
+            tangGiam={tangGiam}
+          />
+        </Grid>
+
+        <Grid xs={12} md={12} lg={12}>
+          <ChecklistsSuCoNgoai
+            title="Sự cố ngoài checklist "
+            subheader="Số lượng sự cố ngoài"
+            chart={{
+              categories: dataTotalYearSuCoNgoai?.categories,
+              series: dataTotalYearSuCoNgoai?.series,
+            }}
+            selectedYear={selectedYearSuCoNgoai}
+            selectedKhoiCV={selectedKhoiCVSuCoNgoai}
+            selectedTangGiam={selectedTangGiamSuCoNgoai}
+            onYearChange={setSelectedYearSuCoNgoai}
+            onTangGiamChange={setSelectedTangGiamSuCoNgoai}
+            onKhoiChange={setSelectedKhoiCVSuCoNgoai}
+            STATUS_OPTIONS={STATUS_OPTIONS}
+            tangGiam={tangGiam}
+          />
+        </Grid>
+
+        {dataTotalKhuvuc && (
+          <Grid xs={12} md={6} lg={4}>
+            <AppCurrentDownload
+              title="Khai báo khu vực"
+              chart={{
+                series: dataTotalKhuvuc,
+                colors: [
+                  'rgb(0, 167, 111)',
+                  'rgb(255, 171, 0)',
+                  'rgb(255, 86, 48)',
+                  'rgb(0, 184, 217)',
+                ],
+              }}
+            />
+          </Grid>
+        )}
+
+        {dataTotalHangmuc && (
+          <Grid xs={12} md={6} lg={4}>
+            <AppCurrentDownload
+              title="Khai báo hạng mục"
+              chart={{
+                series: dataTotalHangmuc,
+                colors: [
+                  'rgb(0, 167, 111)',
+                  'rgb(255, 171, 0)',
+                  'rgb(255, 86, 48)',
+                  'rgb(0, 184, 217)',
+                ],
+              }}
+            />
+          </Grid>
+        )}
+
+        <Grid xs={12} md={6} lg={4}>
+          {dataTotalKhoiCV && (
+            <AnalyticsCurrentVisits
+              title={`Khai báo Checklists: ${totalKhoiCV}`}
+              chart={{
+                series: dataTotalKhoiCV,
+                colors: [
+                  'rgb(0, 167, 111)',
+                  'rgb(255, 171, 0)',
+                  'rgb(255, 86, 48)',
+                  'rgb(0, 184, 217)',
+                ],
+              }}
+            />
+          )}
+        </Grid>
+      </Grid>
+    </Container>
+  );
 }

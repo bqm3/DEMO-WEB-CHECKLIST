@@ -26,8 +26,8 @@ import {
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 // _mock
-import { _orders, KHUVUC_STATUS_OPTIONS } from 'src/_mock';
-import { useGetChecklistWeb, useGetCalv, useGetKhoiCV } from 'src/api/khuvuc';
+import { _orders, KHUVUC_STATUS_OPTIONS, PRODUCT_STOCK_OPTIONS } from 'src/_mock';
+import { useGetChecklistWeb, useGetCalv, useGetKhoiCV, useGetToanha } from 'src/api/khuvuc';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // components
@@ -48,7 +48,12 @@ import {
 
 import { useSnackbar } from 'src/components/snackbar';
 // types
-import { IChecklist, IKhuvucTableFilters, IKhuvucTableFilterValue } from 'src/types/khuvuc';
+import {
+  IChecklist,
+  IKhuvucTableFilters,
+  IKhuvucTableFilterValue,
+  IChecklistTableFilters,
+} from 'src/types/khuvuc';
 //
 import ChecklistTableRow from '../checklist-table-row';
 import ChecklistTableToolbar from '../checklist-table-toolbar';
@@ -62,17 +67,18 @@ import TableSelectedAction from '../table-selected-action';
 const TABLE_HEAD = [
   { id: 'ID_Checklist', label: 'Mã', width: 10 },
   { id: 'Checklist', label: 'Tên checklist' },
-  { id: 'ID_Hangmuc', label: 'Hạng mục', width: 220, align: 'center' },
-  { id: 'ID_Khuvuc', label: 'Khu vực', width: 220, align: 'center' },
-  { id: 'ID_KhoiCVs', label: 'Khối công việc', width: 250, align: 'center' },
+  { id: 'ID_Hangmuc', label: 'Hạng mục', width: 230, align: 'center' },
+  { id: 'ID_Khuvuc', label: 'Khu vực', width: 230, align: 'center' },
+  { id: 'ID_KhoiCVs', label: 'Khối công việc', width: 200, align: 'center' },
   { id: '', width: 10 },
 ];
 
-const defaultFilters: IKhuvucTableFilters = {
+const defaultFilters: IChecklistTableFilters = {
   name: '',
   status: 'all',
   startDate: null,
   endDate: null,
+  building: [],
 };
 
 const STORAGE_KEY = 'accessToken';
@@ -105,17 +111,16 @@ export default function ChecklistCalvListView() {
 
   const { khoiCV } = useGetKhoiCV();
 
+  const { toanha } = useGetToanha();
+
   const [rowsPerPageCustom, setRowsPerPageCustom] = useState(table?.rowsPerPage || 30); // Giá trị mặc định của số mục trên mỗi trang
 
   const handleRowsPerPageChange = (event: any) => {
-    const val = event.target.value; 
+    const val = event.target.value;
     setRowsPerPageCustom(val);
-    table?.onChangeRowsPerPage(val); 
+    table?.onChangeRowsPerPage(val);
   };
 
-  console.log('rowsPerPage', rowsPerPageCustom);
-
-  console.log('table.rowsPerPage', table.rowsPerPage, typeof table.rowsPerPage);
   const STATUS_OPTIONS = useMemo(
     () => [
       { value: 'all', label: 'Tất cả' },
@@ -125,6 +130,16 @@ export default function ChecklistCalvListView() {
       })),
     ],
     [khoiCV]
+  );
+
+  const BUILDING_OPTIONS = useMemo(
+    () => [
+      ...toanha.map((khoi) => ({
+        value: khoi.ID_Toanha.toString(),
+        label: khoi.Toanha,
+      })),
+    ],
+    [toanha]
   );
 
   // Use the checklist data in useEffect to set table data
@@ -425,7 +440,7 @@ export default function ChecklistCalvListView() {
             onFilters={handleFilters}
             headers={headers}
             dataFormatExcel={dataFormatExcel}
-            //
+            buildingOptions={BUILDING_OPTIONS}
             canReset={canReset}
             onResetFilters={handleResetFilters}
           />
@@ -434,7 +449,6 @@ export default function ChecklistCalvListView() {
             <ChecklistTableFiltersResult
               filters={filters}
               onFilters={handleFilters}
-              //
               onResetFilters={handleResetFilters}
               //
               results={dataInPage?.length}
@@ -522,7 +536,7 @@ export default function ChecklistCalvListView() {
               <InputLabel>Số mục mỗi trang</InputLabel>
               <Select
                 value={rowsPerPageCustom}
-                onChange={(event:any) => {
+                onChange={(event: any) => {
                   setRowsPerPageCustom(Number(event.target.value));
                   table.onChangeRowsPerPage(event); // Truyền trực tiếp event vào table.onChangeRowsPerPage
                 }}
@@ -593,10 +607,10 @@ function applyFilter({
 }: {
   inputData: IChecklist[];
   comparator: (a: any, b: any) => number;
-  filters: IKhuvucTableFilters;
+  filters: IChecklistTableFilters;
   // dateError: boolean;
 }) {
-  const { status, name } = filters;
+  const { status, name, building } = filters;
 
   const stabilizedThis = inputData?.map((el, index) => [el, index] as const);
 
@@ -621,6 +635,9 @@ function applyFilter({
         `${checklist.ent_khuvuc.MaQrCode}`.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
         `${checklist.ent_khuvuc.Tenkhuvuc}`.toLowerCase().indexOf(name.toLowerCase()) !== -1
     );
+  }
+  if (building.length) {
+    inputData = inputData.filter((item) => building.includes(String(item?.ent_khuvuc?.ent_toanha?.ID_Toanha)));
   }
 
   if (status !== 'all') {

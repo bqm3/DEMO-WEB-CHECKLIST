@@ -144,7 +144,7 @@ export default function GiamsatListView() {
   const handleDeleteRow = useCallback(
     async (id: string) => {
       await axios
-        .put(`https://checklist.pmcweb.vn/demo/api/ent_duan/delete/${id}`, [], {
+        .put(`https://checklist.pmcweb.vn/demo/api/ent_user/delete/${id}`, [], {
           headers: {
             Accept: 'application/json',
             Authorization: `Bearer ${accessToken}`,
@@ -421,9 +421,11 @@ function applyFilter({
   if (name) {
     inputData = inputData?.filter(
       (order) =>
-        order.UserName.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+        `${order.UserName}`.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+        `${order.Hoten}`.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+        `${order.ent_chucvu.Chucvu}`.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
         `${order?.ent_duan?.Duan}`.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-        order.Email.toLowerCase().indexOf(name.toLowerCase()) !== -1
+        `${order.Email}`.toLowerCase().indexOf(name.toLowerCase()) !== -1
     );
   }
 

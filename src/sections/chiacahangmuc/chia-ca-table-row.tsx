@@ -43,7 +43,7 @@ export default function CalvTableRow({
   onSelectRow,
   onDeleteRow,
 }: Props) {
-  const { ID_Duan, ent_calv, ent_duan, Ngaythu , ID_ThietLapCa } = row;
+  const { ID_Duan, ent_calv, ent_duan, Ngaythu , ID_ThietLapCa, Sochecklist } = row;
 
   const confirm = useBoolean();
 
@@ -71,6 +71,7 @@ export default function CalvTableRow({
 
      
       <TableCell> {ent_calv.Tenca} </TableCell>
+      <TableCell> {Sochecklist} </TableCell>
       <TableCell>
          Ngày {Ngaythu}
       </TableCell>

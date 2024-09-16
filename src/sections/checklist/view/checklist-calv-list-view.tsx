@@ -68,13 +68,13 @@ import ChecklistTableFiltersResult from '../tbchecklist-table-filters-result';
 
 const TABLE_HEAD = [
   { id: 'Ngay', label: 'Ngày checklist' },
-  { id: 'ID_Giamsat', label: 'Người checklist', align: 'center' },
-  { id: 'Tong', label: 'Số Checklist', align: 'center' },
-  { id: 'Giobd', label: 'Giờ bắt đầu', align: 'center' },
-  { id: 'Giokt', label: 'Giờ kết thúc', align: 'center' },
-  { id: 'ID_Calv', label: 'Ca làm việc', align: 'center' },
-  { id: 'ID_KhoiCV', label: 'Khối công việc', align: 'center' },
-  { id: 'Tinhtrang', label: 'Trạng thái', align: 'center' },
+  { id: 'ID_Giamsat', label: 'Người checklist' },
+  { id: 'Tong', label: 'Số Checklist' },
+  { id: 'Giobd', label: 'Giờ ' },
+  { id: 'ID_Calv', label: 'Ca làm việc' },
+  { id: 'ID_ThietLapCa', label: 'Thiết lập ca' },
+  { id: 'ID_KhoiCV', label: 'Khối công việc' },
+  { id: 'Tinhtrang', label: 'Trạng thái' },
   { id: '', width: 50 },
 ];
 
@@ -152,7 +152,7 @@ export default function ChecklistCalvListView() {
     table.page * table.rowsPerPage + table.rowsPerPage
   );
 
-  const denseHeight = table.dense ? 52 : 72;
+  const denseHeight = 52;
 
   const canReset =
     !!filters.name || filters.status !== 'all' || (!!filters.startDate && !!filters.endDate);
