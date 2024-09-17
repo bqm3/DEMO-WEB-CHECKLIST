@@ -290,6 +290,7 @@ export default function SuCoListView() {
 
   const [dataFormatExcel, setDataFormatExcel] = useState<any>([]);
 
+  console.log('dataSelect?.Tinhtrangxuly',tinhTrangXuLy)
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'xl'}>

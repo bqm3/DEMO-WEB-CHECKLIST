@@ -65,7 +65,7 @@ type ChartData = {
 };
 
 const columns: GridColDef<[number]>[] = [
-  { field: 'id',headerName:'Mã dự án', width: 0 },
+  { field: 'id', headerName: 'Mã dự án', width: 0 },
   {
     field: 'projectName',
     headerName: 'Tên dự án',
@@ -117,7 +117,7 @@ const months = [
   { value: '10', label: 'Tháng 10' },
   { value: '11', label: 'Tháng 11' },
   { value: '12', label: 'Tháng 12' },
-]
+];
 
 const nhoms = [
   { value: 'all', label: 'Tất cả' },
@@ -125,18 +125,18 @@ const nhoms = [
   { value: '2', label: 'Nhóm B' },
   { value: '3', label: 'Nhóm C' },
   { value: '4', label: 'Nhóm D' },
-]
+];
 
 const tangGiam = [
   { value: 'desc', label: 'Giảm' },
   { value: 'asc', label: 'Tăng' },
-]
+];
 
 const top = [
   { value: '5', label: 'Top 5' },
   { value: '10', label: 'Top 10' },
   { value: '20', label: 'Top 20' },
-]
+];
 
 export default function OverviewAnalyticsView() {
   const theme = useTheme();
@@ -160,7 +160,10 @@ export default function OverviewAnalyticsView() {
   const [selectedTop, setSelectedTop] = useState('5');
 
   // ===========================
-  const [dataTotalYearSuco, setDataTotalYearSuco] = useState<ChartData>({ categories: [], series: [] });
+  const [dataTotalYearSuco, setDataTotalYearSuco] = useState<ChartData>({
+    categories: [],
+    series: [],
+  });
   const [selectedYearSuco, setSelectedYearSuco] = useState('2024');
   const [selectedMonthSuco, setSelectedMonthSuco] = useState(`all`);
   const [selectedKhoiCVSuco, setSelectedKhoiCVSuco] = useState('all');
@@ -170,7 +173,10 @@ export default function OverviewAnalyticsView() {
 
   // ===============
 
-  const [dataTotalYearSuCoNgoai, setDataTotalYearSuCoNgoai] = useState<ChartData>({ categories: [], series: [] });
+  const [dataTotalYearSuCoNgoai, setDataTotalYearSuCoNgoai] = useState<ChartData>({
+    categories: [],
+    series: [],
+  });
   const [selectedYearSuCoNgoai, setSelectedYearSuCoNgoai] = useState('2024');
   const [selectedMonthSuCoNgoai, setSelectedMonthSuCoNgoai] = useState(`all`);
   const [selectedKhoiCVSuCoNgoai, setSelectedKhoiCVSuCoNgoai] = useState('all');
@@ -223,12 +229,20 @@ export default function OverviewAnalyticsView() {
           const transformedRows = dataRes.map((project: any) => ({
             id: project.projectId,
             projectName: project.projectName,
-            'Khối kỹ thuật': project.createdKhois['Khối kỹ thuật']?.completionRatio ? `${project.createdKhois['Khối kỹ thuật']?.completionRatio} %` : null,
-            'Khối làm sạch': project.createdKhois['Khối làm sạch']?.completionRatio ? `${project.createdKhois['Khối làm sạch']?.completionRatio} %` : null,
-            'Khối dịch vụ': project.createdKhois['Khối dịch vụ']?.completionRatio ? `${project.createdKhois['Khối dịch vụ']?.completionRatio} %` : null,
-            'Khối bảo vệ': project.createdKhois['Khối bảo vệ']?.completionRatio ? `${project.createdKhois['Khối bảo vệ']?.completionRatio} %` : null, 
+            'Khối kỹ thuật': project.createdKhois['Khối kỹ thuật']?.completionRatio
+              ? `${project.createdKhois['Khối kỹ thuật']?.completionRatio} %`
+              : null,
+            'Khối làm sạch': project.createdKhois['Khối làm sạch']?.completionRatio
+              ? `${project.createdKhois['Khối làm sạch']?.completionRatio} %`
+              : null,
+            'Khối dịch vụ': project.createdKhois['Khối dịch vụ']?.completionRatio
+              ? `${project.createdKhois['Khối dịch vụ']?.completionRatio} %`
+              : null,
+            'Khối bảo vệ': project.createdKhois['Khối bảo vệ']?.completionRatio
+              ? `${project.createdKhois['Khối bảo vệ']?.completionRatio} %`
+              : null,
           }));
-      
+
           setDataPercent(transformedRows);
         })
         .catch((err) => console.log('err', err));
@@ -273,7 +287,15 @@ export default function OverviewAnalyticsView() {
     };
 
     handleTotalKhoiCV();
-  }, [accessToken, selectedYear, selectedKhoiCV, selectedMonth, selectedNhom, selectedTangGiam,selectedTop]);
+  }, [
+    accessToken,
+    selectedYear,
+    selectedKhoiCV,
+    selectedMonth,
+    selectedNhom,
+    selectedTangGiam,
+    selectedTop,
+  ]);
 
   useEffect(() => {
     const handleTotalKhoiCV = async () => {
@@ -294,10 +316,18 @@ export default function OverviewAnalyticsView() {
     };
 
     handleTotalKhoiCV();
-  }, [accessToken, selectedYearSuco, selectedKhoiCVSuco, selectedMonthSuco, selectedNhomSuco, selectedTangGiamSuco, selectedTopSuco]);
+  }, [
+    accessToken,
+    selectedYearSuco,
+    selectedKhoiCVSuco,
+    selectedMonthSuco,
+    selectedNhomSuco,
+    selectedTangGiamSuco,
+    selectedTopSuco,
+  ]);
 
-   // Sự cố ngoài
-   useEffect(() => {
+  // Sự cố ngoài
+  useEffect(() => {
     const handleTangGiam = async () => {
       await axios
         .get(
@@ -318,16 +348,34 @@ export default function OverviewAnalyticsView() {
     handleTangGiam();
   }, [accessToken, selectedYearSuCoNgoai, selectedKhoiCVSuCoNgoai, selectedTangGiamSuCoNgoai]);
 
+  const handleLinkHSSE = () => {
+    const url =
+      'https://pmcwebvn.sharepoint.com/sites/PMCteam/SitePages/B%C3%A1o-c%C3%A1o-HSSE.aspx?csf=1&web=1&share=EUBekLeeP6hLszUcIm2kXQEBm6ZHozG95Gn14yIxExnPFw&e=HsaK0H';
+    window.open(url, '_blank');
+  };
+
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
-      <Typography
-        variant="h4"
+      <Grid
+        container
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
         sx={{
-          mb: { xs: 3, md: 5 },
+          mb: { xs: 1, md: 2 },
         }}
       >
-        Hi, {user?.Hoten} {user?.ent_chucvu?.Chucvu ? `(${user?.ent_chucvu?.Chucvu})` : ''}
-      </Typography>
+        <Typography variant="h4">
+          Hi, {user?.Hoten} {user?.ent_chucvu?.Chucvu ? `(${user?.ent_chucvu?.Chucvu})` : ''}
+        </Typography>
+        <Button
+          variant="contained"
+          startIcon={<Iconify icon="eva:link-2-fill" />}
+          onClick={handleLinkHSSE}
+        >
+          Báo cáo HSSE
+        </Button>
+      </Grid>
       <Grid container spacing={3}>
         <Grid xs={12} md={12} lg={12}>
           <div>
@@ -356,7 +404,9 @@ export default function OverviewAnalyticsView() {
 
         <Grid xs={12} md={12} lg={12}>
           <Box sx={{ maxHeight: 400, width: '100%', my: 3 }}>
-            <Typography sx={{pb: 1.5, fontWeight: '600', fontSize: 18}}>Tỉ lệ hoàn thành checklist hôm qua</Typography>
+            <Typography sx={{ pb: 1.5, fontWeight: '600', fontSize: 18 }}>
+              Tỉ lệ hoàn thành checklist hôm qua
+            </Typography>
             <DataGrid
               rows={dataPercent}
               columns={columns}
@@ -367,7 +417,6 @@ export default function OverviewAnalyticsView() {
                   },
                 },
               }}
-              
               pageSizeOptions={[20, 30, 50]}
               disableRowSelectionOnClick
             />
@@ -388,14 +437,12 @@ export default function OverviewAnalyticsView() {
             selectedTangGiam={selectedTangGiam}
             selectedNhom={selectedNhom}
             selectedTop={selectedTop}
-
             onYearChange={setSelectedYear}
             onTangGiamChange={setSelectedTangGiam}
             onNhomChange={setSelectedNhom}
             onKhoiChange={setSelectedKhoiCV}
             onMonthChange={setSelectedMonth}
             onTopChange={setSelectedTop}
-        
             STATUS_OPTIONS={STATUS_OPTIONS}
             months={months}
             nhoms={nhoms}
@@ -417,14 +464,12 @@ export default function OverviewAnalyticsView() {
             selectedTop={selectedTopSuco}
             selectedNhom={selectedNhomSuco}
             selectedMonth={selectedMonthSuco}
-
             onYearChange={setSelectedYearSuco}
             onTangGiamChange={setSelectedTangGiamSuco}
             onKhoiChange={setSelectedKhoiCVSuco}
             onNhomChange={setSelectedNhomSuco}
             onTopChange={setSelectedTopSuco}
             onMonthChange={setSelectedMonthSuco}
-        
             STATUS_OPTIONS={STATUS_OPTIONS}
             months={months}
             nhoms={nhoms}
@@ -442,18 +487,16 @@ export default function OverviewAnalyticsView() {
             selectedYear={selectedYearSuCoNgoai}
             selectedKhoiCV={selectedKhoiCVSuCoNgoai}
             selectedTangGiam={selectedTangGiamSuCoNgoai}
-
             onYearChange={setSelectedYearSuCoNgoai}
             onTangGiamChange={setSelectedTangGiamSuCoNgoai}
             onKhoiChange={setSelectedKhoiCVSuCoNgoai}
-
             STATUS_OPTIONS={STATUS_OPTIONS}
             tangGiam={tangGiam}
           />
         </Grid>
-        
+
         <Grid xs={12} md={12} lg={12}>
-        {dataTotalErrorWeek && (
+          {dataTotalErrorWeek && (
             <BankingRecentTransitions
               title="Sự cố ngày hôm trước"
               tableData={dataTotalErrorWeek}
@@ -466,7 +509,7 @@ export default function OverviewAnalyticsView() {
                 { id: '' },
               ]}
             />
-          )}  
+          )}
         </Grid>
       </Grid>
     </Container>

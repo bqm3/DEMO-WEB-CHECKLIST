@@ -304,7 +304,6 @@ export default function ChecklistCalvListView() {
       console.error('Error downloading the Excel file', error);
     }
   }, [accessToken, dataFiltered, filters]);
-  // }, [ dataFiltered, filters]);
 
   const handleResetFilters = useCallback(() => {
     setFilters(defaultFilters);

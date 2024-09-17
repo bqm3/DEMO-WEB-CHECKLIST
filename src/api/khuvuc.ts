@@ -283,7 +283,7 @@ export function useGetKhuVuc() {
 
 export function useGetDuan() {
   const accessToken = localStorage.getItem(STORAGE_KEY);
-  const URL = 'https://checklist.pmcweb.vn/demo/api/ent_duan/';
+  const URL = 'https://checklist.pmcweb.vn/demo/api/ent_duan';
   const fetCher = (url: string) =>
     fetch(url, {
       method: 'get',

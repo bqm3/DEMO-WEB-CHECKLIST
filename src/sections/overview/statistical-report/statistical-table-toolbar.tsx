@@ -21,13 +21,15 @@ import { IBaoCaoTableFilters, IBaoCaoTableFilterValue } from 'src/types/khuvuc';
 
 type Props = {
   filters: IBaoCaoTableFilters;
+  indexBaoCao: string | null;
   onFilters: (name: string, value: IBaoCaoTableFilterValue) => void;
+  publishOptions: {
+    value: string;
+    label: string;
+  }[];
 };
 
-export default function ProductTableToolbar({
-  filters,
-  onFilters,
-}: Props) {
+export default function ProductTableToolbar({ filters, onFilters, publishOptions ,indexBaoCao}: Props) {
   const popover = usePopover();
 
   const handleFilterStartDate = useCallback(
@@ -40,6 +42,16 @@ export default function ProductTableToolbar({
   const handleFilterEndDate = useCallback(
     (newValue: Date | null) => {
       onFilters('endDate', newValue);
+    },
+    [onFilters]
+  );
+
+  const handleFilterPublish = useCallback(
+    (event: SelectChangeEvent<string[]>) => {
+      onFilters(
+        'publish',
+        typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value
+      );
     },
     [onFilters]
   );
@@ -95,6 +107,43 @@ export default function ProductTableToolbar({
             }}
           />
         </FormControl>
+        {
+          (indexBaoCao === '3' || indexBaoCao === '4') &&
+          <FormControl
+          sx={{
+            flexShrink: 0,
+            width: { xs: 1, md: 200 },
+          }}
+        >
+          <InputLabel>Khối công việc</InputLabel>
+
+          <Select
+            multiple
+            value={filters.publish}
+            onChange={handleFilterPublish}
+            input={<OutlinedInput label="Khối công việc" />}
+            renderValue={(selected) =>
+              selected
+                .map((value) => publishOptions.find((option) => option.value === value)?.label)
+                .join(', ')
+            }
+            sx={{ textTransform: 'capitalize' }}
+          >
+            {publishOptions.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                <Checkbox
+                  disableRipple
+                  size="small"
+                  checked={filters.publish.includes(option.value)}
+                />
+                {option.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        }
+
+       
         {/* <FormControl
           sx={{
             flexShrink: 0,

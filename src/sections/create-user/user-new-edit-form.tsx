@@ -131,7 +131,6 @@ export default function UserNewEditForm({ currentUser }: Props) {
   const values = watch();
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log('data',data)
     try {
       if (currentUser !== undefined) {
         await axios

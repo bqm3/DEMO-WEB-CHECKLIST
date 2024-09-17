@@ -79,7 +79,7 @@ export type E_Tang = {
 
 export type INhom ={
   ID_Nhom: string;
-  Nhom: string;
+  Tennhom: string;
 }
 
 export type IDuan = {
