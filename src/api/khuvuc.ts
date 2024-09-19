@@ -6,7 +6,6 @@ import { useEffect, useMemo } from 'react';
 
 // types
 import useSWR from 'swr';
-import { IChinhanh, IChucVu, INhompb } from 'src/types/scan';
 
 const STORAGE_KEY = 'accessToken';
 
@@ -18,6 +17,7 @@ export function useGetChuKyDuAn() {
       method: 'get',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
       },
     }).then((res) => res.json());
   const { data, isLoading, error, isValidating } = useSWR(URL, fetCher);

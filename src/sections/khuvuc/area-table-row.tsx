@@ -39,7 +39,7 @@ type Props = {
   onQrRow: VoidFunction;
   onViewRow1: any;
   onQrRowHM: any;
-  index:number;
+  index: number;
 };
 
 export default function AreaTableRow({
@@ -52,7 +52,7 @@ export default function AreaTableRow({
   onViewRow1,
   onQrRowHM,
   khoiCV,
-  index
+  index,
 }: Props) {
   const {
     ID_Khuvuc,
@@ -77,8 +77,6 @@ export default function AreaTableRow({
 
   const popover = usePopover();
   const popover1 = usePopover();
-
-  
 
   const [ID_Hangmuc, setIDHangMuc] = useState(null);
   const [qrHM, setQrHM] = useState(null);
@@ -136,7 +134,6 @@ export default function AreaTableRow({
         <Checkbox checked={selected} onClick={onSelectRow} />
       </TableCell>
 
-
       <TableCell>
         <Box
           onClick={onViewRow}
@@ -154,7 +151,7 @@ export default function AreaTableRow({
       <TableCell>{Tenkhuvuc}</TableCell>
       <TableCell> {ent_toanha?.Toanha} </TableCell>
 
-      <TableCell > {MaQrCode} </TableCell>
+      <TableCell> {MaQrCode} </TableCell>
 
       <TableCell>{labels}</TableCell>
       <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
@@ -202,7 +199,7 @@ export default function AreaTableRow({
                 <TableCell>
                   <Box>HM{item.ID_Hangmuc}</Box>
                 </TableCell>
-                
+
                 <ListItemText
                   primary={item?.Hangmuc}
                   // secondary={item?.}
@@ -215,7 +212,7 @@ export default function AreaTableRow({
                   //   mt: 0.5,
                   // }}
                 />
-<TableCell>{item?.MaQrCode}</TableCell>
+                <TableCell>{item?.MaQrCode}</TableCell>
                 {/* <TableCell>
                   <Label
                     variant="soft"
@@ -275,7 +272,7 @@ export default function AreaTableRow({
         <MenuItem
           onClick={() => {
             confirm.onTrue();
-            popover.onClose();
+            // popover.onClose();
           }}
           sx={{ color: 'error.main' }}
         >
@@ -312,8 +309,8 @@ export default function AreaTableRow({
       </CustomPopover>
 
       <ConfirmDialog
-        open={confirm1.value}
-        onClose={confirm1.onFalse}
+        open={confirm.value}
+        onClose={confirm.onFalse}
         title="PMC thông báo"
         content="Bạn có thực sự muốn xóa không?"
         action={

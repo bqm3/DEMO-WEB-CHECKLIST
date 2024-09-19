@@ -59,12 +59,11 @@ export default function ChecklistYearStatistics({
   const tangGiamPopover = usePopover();
 
   const chartOptions = useChart({
-    colors: ['#FF0000', '#f1c232', '#00FF00'], // Red for "Chưa xử lý", Yellow for "Đang xử lý", Green for "Đã xử lý"
+    colors: ['#00a76f', '#f1c232', '#FF0000'], // Red for "Chưa xử lý", Yellow for "Đang xử lý", Green for "Đã xử lý"
     stroke: {
       show: true,
       width: 0,
-      colors: ['#FF0000', '#f1c232', '#00FF00'],
-    
+      colors: ['#FF0000', '#f1c232', '#00a76f'],
     },
     dataLabels: {
       enabled: true,
@@ -143,25 +142,7 @@ export default function ChecklistYearStatistics({
                   sx={{ ml: 0.5 }}
                 />
               </ButtonBase>
-              <ButtonBase
-                onClick={khoiPopover.onOpen} // Open the KhoiCV popover
-                sx={{
-                  pl: 1,
-                  py: 0.5,
-                  pr: 0.5,
-                  borderRadius: 1,
-                  typography: 'subtitle2',
-                  bgcolor: 'background.neutral',
-                }}
-              >
-                {STATUS_OPTIONS.find((option: any) => option.value === selectedKhoiCV)?.label}
-                <Iconify
-                  width={16}
-                  icon={khoiPopover.open ? 'eva:arrow-ios-upward-fill' : 'eva:arrow-ios-downward-fill'}
-                  sx={{ ml: 0.5 }}
-                />
-              </ButtonBase>
-              
+             
             </Box>
           }
         />
@@ -184,15 +165,6 @@ export default function ChecklistYearStatistics({
         </MenuItem>
       </CustomPopover>
 
-      <CustomPopover open={khoiPopover.open} onClose={khoiPopover.onClose} sx={{ width: 140 }}>
-        {STATUS_OPTIONS?.map((item: any) => (
-          <MenuItem selected={item.value === selectedKhoiCV}  onClick={() => handleChangeKhoi(item.value)}>
-            {item.label}
-          </MenuItem>
-        ))}
-      </CustomPopover>
-
-      
     </>
   );
 }

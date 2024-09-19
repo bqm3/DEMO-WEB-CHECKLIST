@@ -20,6 +20,7 @@ const OverviewEcommercePage = lazy(() => import('src/pages/dashboard/ecommerce')
 const OverviewAnalyticsPage = lazy(() => import('src/pages/dashboard/analytics'));
 const StattisticalReportPage = lazy(() => import('src/pages/dashboard/statistical-report'));
 const OverviewManagementPage = lazy(() => import('src/pages/dashboard/management'));
+const LocationManagementPage = lazy(() => import('src/pages/dashboard/location'));
 const OverviewBankingPage = lazy(() => import('src/pages/dashboard/banking'));
 const OverviewBookingPage = lazy(() => import('src/pages/dashboard/booking'));
 const OverviewFilePage = lazy(() => import('src/pages/dashboard/file'));
@@ -230,6 +231,7 @@ export const dashboardRoutes = [
           { path: 'new', element: <ChukyDuanNewPage /> },
         ],
       },
+      { path: 'quan-ly-vi-tri', element: <LocationManagementPage /> },
       {
         path: 'hangmuc',
         children: [

@@ -140,24 +140,7 @@ export default function ChecklistYearStatistics({
                   sx={{ ml: 0.5 }}
                 />
               </ButtonBase>
-              <ButtonBase
-                onClick={khoiPopover.onOpen} // Open the KhoiCV popover
-                sx={{
-                  pl: 1,
-                  py: 0.5,
-                  pr: 0.5,
-                  borderRadius: 1,
-                  typography: 'subtitle2',
-                  bgcolor: 'background.neutral',
-                }}
-              >
-                {STATUS_OPTIONS.find((option: any) => option.value === selectedKhoiCV)?.label}
-                <Iconify
-                  width={16}
-                  icon={khoiPopover.open ? 'eva:arrow-ios-upward-fill' : 'eva:arrow-ios-downward-fill'}
-                  sx={{ ml: 0.5 }}
-                />
-              </ButtonBase>
+            
             </Box>
           }
         />
@@ -177,15 +160,6 @@ export default function ChecklistYearStatistics({
         {series.map((item: any) => (
           <MenuItem key={item.name} selected={selectedYear === item.name} onClick={() => handleChangeSeries(item.name)}>
             {item.name}
-          </MenuItem>
-        ))}
-      </CustomPopover>
-
-      {/* Popover for selecting KhoiCV */}
-      <CustomPopover open={khoiPopover.open} onClose={khoiPopover.onClose} sx={{ width: 140 }}>
-        {STATUS_OPTIONS?.map((item: any) => (
-          <MenuItem key={item.value} selected={item.value === selectedKhoiCV} onClick={() => handleChangeKhoi(item.value)}>
-            {item.label}
           </MenuItem>
         ))}
       </CustomPopover>

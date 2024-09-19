@@ -105,6 +105,8 @@ export const paths = {
       app: `${ROOTS.DASHBOARD}/app`,
       ecommerce: `${ROOTS.DASHBOARD}/ecommerce`,
       statistical_report: `${ROOTS.DASHBOARD}/statistical-report`,
+      location: `${ROOTS.DASHBOARD}/quan-ly-vi-tri`,
+      
       analytics: `${ROOTS.DASHBOARD}/analytics`,
       management: `${ROOTS.DASHBOARD}/management`,
       banking: `${ROOTS.DASHBOARD}/banking`,

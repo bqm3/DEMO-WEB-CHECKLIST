@@ -11,10 +11,12 @@ import Tooltip from '@mui/material/Tooltip';
 import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
-import TableContainer from '@mui/material/TableContainer';
+import TableContainer from '@mui/material/TableContainer'
+import { Stack } from '@mui/material';
 // routes
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
+import { LoadingButton } from '@mui/lab';
 // _mock
 import { _orders, ORDER_STATUS_OPTIONS, PERMISSION_STATUS_OPTIONS } from 'src/_mock';
 import {
@@ -62,6 +64,8 @@ import {
 import DuanTableRow from '../user-table-row';
 import DuanTableToolbar from '../user-table-toolbar';
 import DuanTableFiltersResult from '../user-table-filters-result';
+import FileManagerNewFolderDialog from '../file-manager-new-folder-dialog'
+
 
 // ----------------------------------------------------------------------
 
@@ -97,7 +101,11 @@ export default function GiamsatListView() {
 
   const confirm = useBoolean();
 
+  const upload = useBoolean();
+
   const { enqueueSnackbar } = useSnackbar();
+
+  const [loading, setLoading] = useState<Boolean | any>(false);
 
   const accessToken = localStorage.getItem(STORAGE_KEY);
 
@@ -217,7 +225,8 @@ export default function GiamsatListView() {
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'xl'}>
-        <CustomBreadcrumbs
+      <Stack direction="row" alignItems="center" justifyContent="space-between">
+      <CustomBreadcrumbs
           heading="Danh sách tài khoản"
           links={[
             {
@@ -234,6 +243,16 @@ export default function GiamsatListView() {
             mb: { xs: 3, md: 5 },
           }}
         />
+          <LoadingButton
+            loading={loading}
+            variant="contained"
+            startIcon={<Iconify icon="eva:cloud-upload-fill" />}
+            onClick={upload.onTrue}
+          >
+            Upload
+          </LoadingButton>
+        </Stack>
+        
         <Tabs
           value={filters.status}
           onChange={handleFilterStatus}
@@ -367,6 +386,12 @@ export default function GiamsatListView() {
           />
         </Card>
       </Container>
+
+      <FileManagerNewFolderDialog
+        open={upload.value}
+        onClose={upload.onFalse}
+        setLoading={setLoading}
+      />
 
       <ConfirmDialog
         open={confirm.value}

@@ -135,7 +135,15 @@ export function useNavData() {
                     { title: t('create'), path: paths.dashboard.calv.new },
                   ],
                 },
-
+                {
+                  title: t('chukyduan'),
+                  path: paths.dashboard.chukyduan.root,
+                  icon: ICONS.analytics,
+                  children: [
+                    { title: t('create'), path: paths.dashboard.chukyduan.new },
+                    { title: t('list'), path: paths.dashboard.chukyduan.root },
+                  ],
+                },
                 {
                   title: t('phanquyenchecklist'),
                   path: paths.dashboard.phanquyenchecklist.root,
@@ -224,13 +232,12 @@ export function useNavData() {
           ],
         },
         {
-          title: t('chukyduan'),
-          path: paths.dashboard.chukyduan.root,
+          title: t('baocaovitri'),
+          path: paths.dashboard.general.location,
           icon: ICONS.analytics,
           children: [
-            { title: t('create'), path: paths.dashboard.chukyduan.new },
-            { title: t('list'), path: paths.dashboard.chukyduan.root },
-          ],
+            { title: t('list'), path: paths.dashboard.general.location },
+          ]
         },
         {
           title: t('createaccount'),

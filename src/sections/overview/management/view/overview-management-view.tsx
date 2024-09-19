@@ -178,11 +178,8 @@ export default function OverviewAnalyticsView() {
     series: [],
   });
   const [selectedYearSuCoNgoai, setSelectedYearSuCoNgoai] = useState('2024');
-  const [selectedMonthSuCoNgoai, setSelectedMonthSuCoNgoai] = useState(`all`);
   const [selectedKhoiCVSuCoNgoai, setSelectedKhoiCVSuCoNgoai] = useState('all');
-  const [selectedNhomSuCoNgoai, setSelectedNhomSuCoNgoai] = useState('4');
   const [selectedTangGiamSuCoNgoai, setSelectedTangGiamSuCoNgoai] = useState('desc');
-  const [selectedTopSuCoNgoai, setSelectedTopSuCoNgoai] = useState('5');
 
   const { khoiCV } = useGetKhoiCV();
 
