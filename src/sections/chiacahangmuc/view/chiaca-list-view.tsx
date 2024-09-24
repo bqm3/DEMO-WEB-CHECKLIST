@@ -206,7 +206,7 @@ export default function ChiacaListView() {
     <>
       <Container maxWidth={settings.themeStretch ? false : 'xl'}>
         <CustomBreadcrumbs
-          heading="Danh sách tài khoản giám sát"
+          heading="Danh sách chia ca"
           links={[
             {
               name: 'Dashboard',
