@@ -21,6 +21,7 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  Typography,
 } from '@mui/material';
 // routes
 import { paths } from 'src/routes/paths';
@@ -159,6 +160,9 @@ export default function ChecklistCalvListView() {
     table.page * table.rowsPerPage,
     table.page * table.rowsPerPage + table.rowsPerPage
   );
+
+
+  console.log('dataFiltered', dataFiltered.length)
 
   const denseHeight = table.dense ? 60 : 60;
 
@@ -547,21 +551,28 @@ export default function ChecklistCalvListView() {
                 <MenuItem value={30}>30</MenuItem>
                 <MenuItem value={50}>50</MenuItem>
               </Select>
+
             </FormControl>
 
+
             {/* Thành phần phân trang */}
-            <Pagination
-              count={Math.ceil(dataFiltered.length / rowsPerPageCustom)} // Số trang
-              page={table.page + 1} // Phân trang bắt đầu từ 1
-              onChange={(event, newPage) => table.onChangePage(event, newPage - 1)} // Điều chỉnh để bắt đầu từ 0
-              boundaryCount={2}
-              sx={{
-                my: 2,
-                mx: 1,
-                display: 'flex',
-                justifyContent: 'flex-end',
-              }}
-            />
+            <Stack>
+              <Pagination
+                count={Math.ceil(dataFiltered.length / rowsPerPageCustom)} // Số trang
+                page={table.page + 1} // Phân trang bắt đầu từ 1
+                onChange={(event, newPage) => table.onChangePage(event, newPage - 1)} // Điều chỉnh để bắt đầu từ 0
+                boundaryCount={2}
+                sx={{
+                  my: 1,
+                  // mx: 1,
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                }}
+              />
+              <Typography variant='subtitle2' sx={{ textAlign: 'right', fontSize: 14, paddingRight: 1 }}>
+                Tổng: {dataFiltered?.length}
+              </Typography>
+            </Stack>
           </Stack>
         </Card>
       </Container>
@@ -626,8 +637,6 @@ function applyFilter({
     inputData = inputData?.filter(
       (checklist) =>
         `${checklist.Checklist}`.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-        `${checklist.Giatridinhdanh}`.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-        `${checklist.Giatrinhan}`.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
         `${checklist.MaQrCode}`.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
         `${checklist.ent_hangmuc.Hangmuc}`.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
         `${checklist.ent_tang.Tentang}`.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||

@@ -312,7 +312,7 @@ export default function TbChecklistCalvListView({ currentChecklist, dataChecklis
           sx={{ pb: 2 }}
         >
           <Stack sx={{ typography: 'body2' }}>
-            <Typography variant="subtitle2" sx={{ mb: 1 }}>
+            <Typography variant="subtitle1" sx={{ mb: 1 }}>
               Thông tin trong ca
             </Typography>
             Ca: {dataChecklistC?.ent_calv?.Tenca}
@@ -324,12 +324,12 @@ export default function TbChecklistCalvListView({ currentChecklist, dataChecklis
           </Stack>
 
           <Stack sx={{ typography: 'body2' }}>
-            <Typography variant="subtitle2" sx={{ mb: 1 }}>
-              Thông tin trong ca
+            <Typography variant="subtitle2" sx={{ mb: 1, color: 'white' }}>
+             1
             </Typography>
             Ngày: {formatDateString(dataChecklistC?.Ngay)}
             <br />
-            Giờ bắt đầu - kết thúc: {dataChecklistC?.Giobd} {dataChecklistC?.Giokt}
+            Giờ bắt đầu - kết thúc: {dataChecklistC?.Giobd} - {dataChecklistC?.Giokt}
             <br />
             Tình trạng: {dataChecklistC?.Tinhtrang === 0 ? 'Mở ra' : 'Đóng ca'}
             <br />

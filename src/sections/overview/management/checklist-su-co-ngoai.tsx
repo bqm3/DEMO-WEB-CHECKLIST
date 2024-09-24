@@ -17,7 +17,7 @@ interface Props extends CardProps {
   title?: string;
   subheader?: string;
   chart: {
-    categories?: string[];
+    categories: string[];
     colors?: string[];
     series:any;
     options?: ApexOptions;
@@ -29,7 +29,9 @@ interface Props extends CardProps {
   onKhoiChange: (khoi: string) => void;
   onTangGiamChange: (tg: string) => void;
   STATUS_OPTIONS: any;
-  tangGiam: any
+  tangGiam: any,
+  handleOpenModal: (name: string,key: string ) => void;
+  handleCloseModal: () => void;
 }
 
 export default function ChecklistYearStatistics({
@@ -44,6 +46,8 @@ export default function ChecklistYearStatistics({
   onTangGiamChange,
   STATUS_OPTIONS,
   tangGiam,
+  handleOpenModal,
+  handleCloseModal,
   ...other
 }: Props) {
   const { categories, colors, series, options } = chart;
@@ -52,6 +56,18 @@ export default function ChecklistYearStatistics({
   const khoiPopover = usePopover();
   const tangGiamPopover = usePopover();
 
+  const handleChartClick = (
+    event: any,
+    chartContext: any,
+    { seriesIndex, dataPointIndex, w }: any
+  ) => {
+    if (dataPointIndex !== -1 && categories.length > 0) {
+      const projectName = categories[dataPointIndex];
+      handleOpenModal(projectName, "su-co-ngoai");
+    }
+    
+  };
+
   const chartOptions = useChart({
     chart: {
       type: 'bar',
@@ -59,6 +75,9 @@ export default function ChecklistYearStatistics({
       height: 350,
       toolbar: {
         show: false,
+      },
+      events: {
+        click: handleChartClick, // Attach the click event handler here at the root 'chart' level
       },
     },
     plotOptions: {
@@ -88,6 +107,7 @@ export default function ChecklistYearStatistics({
         formatter: (val: any) => `${val}`,
       },
     },
+   
   });
 
   const handleChangeSeries = useCallback(

@@ -18,35 +18,33 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import { fCurrency } from 'src/utils/format-number';
 // types
 import { IOrderItem } from 'src/types/order';
-import { IKhuvuc, IKhoiCV, ISucongoai } from 'src/types/khuvuc';
-import { useGetKhoiCV, useGetKhuVuc } from 'src/api/khuvuc';
+import { IKhuvuc, ISucongoai, ITang } from 'src/types/khuvuc';
 // components
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
-import { useState } from 'react';
 import moment from 'moment';
 
 // ----------------------------------------------------------------------
 
 type Props = {
   row: ISucongoai;
-  selected: boolean;
-  onViewRow: VoidFunction;
-  onSelectRow: VoidFunction;
-  onDeleteRow: VoidFunction;
   index: number;
+  // selected: boolean;
+  // onViewRow: VoidFunction;
+  // onSelectRow: VoidFunction;
+  // onDeleteRow: VoidFunction;
 };
 
-export default function AreaTableRow({
+export default function DataTableRow({
   row,
-  selected,
-  onViewRow,
-  onSelectRow,
-  onDeleteRow,
   index,
-}: Props) {
+} // selected,
+// onViewRow,
+// onSelectRow,
+// onDeleteRow,
+: Props) {
   const {
     ID_Suco,
     ID_KV_CV,
@@ -64,6 +62,7 @@ export default function AreaTableRow({
   } = row;
 
   const confirm = useBoolean();
+
   const collapse = useBoolean();
 
   const popover = usePopover();
@@ -73,14 +72,14 @@ export default function AreaTableRow({
   const backgroundColorStyle = index % 2 !== 0 ? '#f3f6f4' : '';
 
   const renderPrimary = (
-    <TableRow hover selected={selected} style={{ backgroundColor: backgroundColorStyle }}>
-      <TableCell padding="checkbox">
+    <TableRow hover>
+      {/* <TableCell padding="checkbox">
         <Checkbox checked={selected} onClick={onSelectRow} />
-      </TableCell>
+      </TableCell> */}
 
       <TableCell>
         <Box
-          onClick={onViewRow}
+          // onClick={onViewRow}
           sx={{
             cursor: 'pointer',
             '&:hover': {
@@ -103,7 +102,7 @@ export default function AreaTableRow({
           }}
         />{' '}
       </TableCell>
-      <TableCell> {moment(Ngayxuly).format('DD-MM-YYYY')} </TableCell>
+      <TableCell> {moment(Ngayxuly)?.format('DD-MM-YYYY')} </TableCell>
       <TableCell> {Noidungsuco} </TableCell>
       <TableCell>
         <Label
@@ -120,18 +119,13 @@ export default function AreaTableRow({
           {`${Tinhtrangxuly}` === '2' && 'Đã xử lý'}
         </Label>
       </TableCell>
-
-      <TableCell>
-        <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
-          <Iconify icon="eva:more-vertical-fill" />
-        </IconButton>
-      </TableCell>
     </TableRow>
   );
 
   return (
     <>
       {renderPrimary}
+
       <CustomPopover
         open={popover.open}
         onClose={popover.onClose}
@@ -140,14 +134,14 @@ export default function AreaTableRow({
       >
         <MenuItem
           onClick={() => {
-            onViewRow();
+            // onViewRow();
             popover.onClose();
           }}
         >
           <Iconify icon="solar:eye-bold" />
-          Cập nhật
+          Xem
         </MenuItem>
-        {/* <MenuItem
+        <MenuItem
           onClick={() => {
             confirm.onTrue();
             popover.onClose();
@@ -156,10 +150,10 @@ export default function AreaTableRow({
         >
           <Iconify icon="solar:trash-bin-trash-bold" />
           Xóa
-        </MenuItem> */}
+        </MenuItem>
       </CustomPopover>
 
-      <ConfirmDialog
+      {/* <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}
         title="PMC thông báo"
@@ -169,7 +163,7 @@ export default function AreaTableRow({
             Xóa
           </Button>
         }
-      />
+      /> */}
     </>
   );
 }

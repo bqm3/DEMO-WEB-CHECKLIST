@@ -35,7 +35,7 @@ interface Props extends CardProps {
   onKhoiChange: (khoi: string) => void;
   onTangGiamChange: (tg: string) => void;
   STATUS_OPTIONS: any;
-  tangGiam: any
+  tangGiam: any;
 }
 
 export default function ChecklistYearStatistics({
@@ -59,7 +59,7 @@ export default function ChecklistYearStatistics({
   const tangGiamPopover = usePopover();
 
   const chartOptions = useChart({
-    colors: ['#00a76f', '#f1c232', '#FF0000'], // Red for "Chưa xử lý", Yellow for "Đang xử lý", Green for "Đã xử lý"
+    colors: ['#FF0000', '#f1c232', '#00a76f'], // Red for "Chưa xử lý", Yellow for "Đang xử lý", Green for "Đã xử lý"
     stroke: {
       show: true,
       width: 0,
@@ -68,7 +68,7 @@ export default function ChecklistYearStatistics({
     dataLabels: {
       enabled: true,
       style: {
-        colors: ['#fff']
+        colors: ['#fff'],
       },
       formatter: (val: any) => val.toFixed(0),
     },
@@ -90,7 +90,6 @@ export default function ChecklistYearStatistics({
     },
     ...options,
   });
-  
 
   const handleChangeSeries = useCallback(
     (newValue: string) => {
@@ -138,11 +137,12 @@ export default function ChecklistYearStatistics({
                 {selectedYear}
                 <Iconify
                   width={16}
-                  icon={yearPopover.open ? 'eva:arrow-ios-upward-fill' : 'eva:arrow-ios-downward-fill'}
+                  icon={
+                    yearPopover.open ? 'eva:arrow-ios-upward-fill' : 'eva:arrow-ios-downward-fill'
+                  }
                   sx={{ ml: 0.5 }}
                 />
               </ButtonBase>
-             
             </Box>
           }
         />
@@ -164,9 +164,6 @@ export default function ChecklistYearStatistics({
           2025
         </MenuItem>
       </CustomPopover>
-
     </>
   );
 }
-
-

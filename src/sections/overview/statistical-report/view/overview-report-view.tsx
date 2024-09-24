@@ -42,7 +42,7 @@ const defaultFilters: IBaoCaoTableFilters = {
   publish: [],
   stock: [],
   startDate: null,
-  endDate: null,
+  endDate: new Date(),
 };
 
 const STORAGE_KEY = 'accessToken';
@@ -117,13 +117,12 @@ export const OverviewReportView = () => {
 
     // Create a link element
     const link = document.createElement('a');
-
     // Set the download attribute with a filename
     link.href = window.URL.createObjectURL(blob);
     link.download =
       (indexBaoCao === '1' && 'Tổng hợp ca.xlsx') ||
       (indexBaoCao === '3' && 'Báo cáo checklist có vấn đề.xlsx') ||
-      (indexBaoCao === '2' && 'Báo cáo checklist có vấn đề.xlsx') ||
+      (indexBaoCao === '2' && 'Bảng kê các sự cố khẩn cấp nằm ngoài Checklist.xlsx') ||
       '';
 
     // Append the link to the body
@@ -140,7 +139,7 @@ export const OverviewReportView = () => {
   const handleExportStatistical = async () => {
     setLoading(true);
     const response = await axios.post(
-      `https://checklist.pmcweb.vn/demo/api/tb_checklistc/thong-ke-tra-cuu`,
+      `https://checklist.pmcweb.vn/demo/api/tb_checklistc/thong-ke`,
       {
         startDate: filters.startDate,
         endDate: filters.endDate,

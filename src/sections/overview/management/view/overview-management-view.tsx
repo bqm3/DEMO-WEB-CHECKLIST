@@ -2,16 +2,20 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 // @mui
 import Grid from '@mui/material/Unstable_Grid2';
-import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Accordion from '@mui/material/Accordion';
 import { Box, TextField } from '@mui/material';
-import AccordionActions from '@mui/material/AccordionActions';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Iconify from 'src/components/iconify';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
+import TableBody from '@mui/material/TableBody';
+import MenuItem from '@mui/material/MenuItem';
 // _mock
 import {
   _analyticTasks,
@@ -27,6 +31,7 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useAuthContext } from 'src/auth/hooks';
 // components
 import { useSettingsContext } from 'src/components/settings';
+import { ISucongoai } from 'src/types/khuvuc';
 // api
 import axios from 'axios';
 import { useGetKhoiCV } from 'src/api/khuvuc';
@@ -39,6 +44,7 @@ import ChecklistsSuCoNgoai from '../checklist-su-co-ngoai';
 import EcommerceSalesOverview from '../checklist-percent-overview';
 import BankingRecentTransitions from '../banking-recent-transitions';
 import AnaLyticsDuan from '../analytics-areas';
+import SuCoListView from '../suco/su-co-list-view';
 
 // ----------------------------------------------------------------------
 // ----------------------------------------------------------------------
@@ -150,6 +156,8 @@ export default function OverviewAnalyticsView() {
   const [dataDuan, setDataDuan] = useState<any>([]);
   const [dataPercent, setDataPercent] = useState<any>([]);
 
+  const [showMax, setShowMax] = useState<any>('6');
+
   const [dataTotalErrorWeek, setDataTotalErrorWeek] = useState<any>([]);
   const [dataTotalYear, setDataTotalYear] = useState<ChartData>({ categories: [], series: [] });
   const [selectedYear, setSelectedYear] = useState('2024');
@@ -180,6 +188,29 @@ export default function OverviewAnalyticsView() {
   const [selectedYearSuCoNgoai, setSelectedYearSuCoNgoai] = useState('2024');
   const [selectedKhoiCVSuCoNgoai, setSelectedKhoiCVSuCoNgoai] = useState('all');
   const [selectedTangGiamSuCoNgoai, setSelectedTangGiamSuCoNgoai] = useState('desc');
+
+  // ===============
+
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedCode, setSelectedCode] = useState('');
+  const [dataTable, setDataTable] = useState<ISucongoai[]>();
+
+  const handleOpenModal = async (name: string, key: string) => {
+    setSelectedCode(name);
+    await axios
+      .get(
+        `https://checklist.pmcweb.vn/demo/api/tb_sucongoai/${key}?name=${name}&year=${dataTotalYearSuCoNgoai}`
+      )
+      .then((data) => {
+        setDataTable(data?.data?.data);
+        setOpenModal(true);
+      })
+      .catch((error) => console.log('error'));
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
 
   const { khoiCV } = useGetKhoiCV();
 
@@ -350,165 +381,186 @@ export default function OverviewAnalyticsView() {
       'https://pmcwebvn.sharepoint.com/sites/PMCteam/SitePages/B%C3%A1o-c%C3%A1o-HSSE.aspx?csf=1&web=1&share=EUBekLeeP6hLszUcIm2kXQEBm6ZHozG95Gn14yIxExnPFw&e=HsaK0H';
     window.open(url, '_blank');
   };
+  console.log('dataTable',dataTable)
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : 'xl'}>
-      <Grid
-        container
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        sx={{
-          mb: { xs: 1, md: 2 },
-        }}
-      >
-        <Typography variant="h4">
-          Hi, {user?.Hoten} {user?.ent_chucvu?.Chucvu ? `(${user?.ent_chucvu?.Chucvu})` : ''}
-        </Typography>
-        <Button
-          variant="contained"
-          startIcon={<Iconify icon="eva:link-2-fill" />}
-          onClick={handleLinkHSSE}
+    <>
+      <Container maxWidth={settings.themeStretch ? false : 'xl'}>
+        <Grid
+          container
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          sx={{
+            mb: { xs: 1, md: 2 },
+          }}
         >
-          Báo cáo HSSE
-        </Button>
-      </Grid>
-      <Grid container spacing={3}>
-        <Grid xs={12} md={12} lg={12}>
-          <div>
-            {Object.keys(dataDuan)
-              .sort((a, b) => b.localeCompare(a))
-              .map((groupName) => (
-                <Accordion key={groupName}>
-                  <AccordionSummary
-                    expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
-                    aria-controls={`${groupName}-content`}
-                    id={`${groupName}-header`}
-                    sx={{ fontWeight: '700' }}
-                  >
-                    {groupName}
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <AnaLyticsDuan
-                      title={`Thông tin các dự án thuộc ${groupName}`}
-                      list={dataDuan[groupName]}
-                    />
-                  </AccordionDetails>
-                </Accordion>
-              ))}
-          </div>
+          <Typography variant="h4">
+            Hi, {user?.Hoten} {user?.ent_chucvu?.Chucvu ? `(${user?.ent_chucvu?.Chucvu})` : ''}
+          </Typography>
+          <Button
+            variant="contained"
+            startIcon={<Iconify icon="eva:link-2-fill" />}
+            onClick={handleLinkHSSE}
+          >
+            Báo cáo HSSE
+          </Button>
         </Grid>
+        <Grid container spacing={3}>
+          <Grid xs={12} md={12} lg={12}>
+            <div>
+              {Object.keys(dataDuan)
+                .sort((a, b) => b.localeCompare(a))
+                .map((groupName) => (
+                  <Accordion key={groupName}>
+                    <AccordionSummary
+                      expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
+                      aria-controls={`${groupName}-content`}
+                      id={`${groupName}-header`}
+                      sx={{ fontWeight: '700' }}
+                    >
+                      {groupName}
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <AnaLyticsDuan
+                        title={`Thông tin các dự án thuộc ${groupName}`}
+                        list={dataDuan[groupName]}
+                      />
+                    </AccordionDetails>
+                  </Accordion>
+                ))}
+            </div>
+          </Grid>
 
-        <Grid xs={12} md={12} lg={12}>
-          <Box sx={{ maxHeight: 400, width: '100%', my: 3 }}>
-            <Typography sx={{ pb: 1.5, fontWeight: '600', fontSize: 18 }}>
-              Tỉ lệ hoàn thành checklist hôm qua
-            </Typography>
-            <DataGrid
-              rows={dataPercent}
-              columns={columns}
-              initialState={{
-                pagination: {
-                  paginationModel: {
-                    pageSize: 20,
+          <Grid xs={12} md={12} lg={12}>
+            <Box sx={{ maxHeight: 400, width: '100%', my: 3 }}>
+              <Typography sx={{ pb: 1.5, fontWeight: '600', fontSize: 18 }}>
+                Tỉ lệ hoàn thành checklist hôm qua
+              </Typography>
+              <DataGrid
+                rows={dataPercent}
+                columns={columns}
+                initialState={{
+                  pagination: {
+                    paginationModel: {
+                      pageSize: 20,
+                    },
                   },
-                },
+                }}
+                pageSizeOptions={[20, 30, 50]}
+                disableRowSelectionOnClick
+              />
+            </Box>
+          </Grid>
+
+          <Grid xs={12} md={12} lg={(selectedTop || selectedTopSuco) === '5' ? 6 : 12}>
+            <ChecklistsHoanThanh
+              title="Tỉ lệ hoàn thành checklist "
+              subheader="Hoàn thành checklist theo ca"
+              chart={{
+                categories: dataTotalYear.categories,
+                series: dataTotalYear.series,
               }}
-              pageSizeOptions={[20, 30, 50]}
-              disableRowSelectionOnClick
+              selectedYear={selectedYear}
+              selectedKhoiCV={selectedKhoiCV}
+              selectedMonth={selectedMonth}
+              selectedTangGiam={selectedTangGiam}
+              selectedNhom={selectedNhom}
+              selectedTop={selectedTop}
+              onYearChange={setSelectedYear}
+              onTangGiamChange={setSelectedTangGiam}
+              onNhomChange={setSelectedNhom}
+              onKhoiChange={setSelectedKhoiCV}
+              onMonthChange={setSelectedMonth}
+              onTopChange={setSelectedTop}
+              STATUS_OPTIONS={STATUS_OPTIONS}
+              months={months}
+              nhoms={nhoms}
+              tangGiam={tangGiam}
+              top={top}
+              showMax={showMax}
+              setShowMax={setShowMax}
             />
-          </Box>
-        </Grid>
-
-        <Grid xs={12} md={12} lg={6}>
-          <ChecklistsHoanThanh
-            title="Tỉ lệ hoàn thành checklist "
-            subheader="Hoàn thành checklist theo ca"
-            chart={{
-              categories: dataTotalYear.categories,
-              series: dataTotalYear.series,
-            }}
-            selectedYear={selectedYear}
-            selectedKhoiCV={selectedKhoiCV}
-            selectedMonth={selectedMonth}
-            selectedTangGiam={selectedTangGiam}
-            selectedNhom={selectedNhom}
-            selectedTop={selectedTop}
-            onYearChange={setSelectedYear}
-            onTangGiamChange={setSelectedTangGiam}
-            onNhomChange={setSelectedNhom}
-            onKhoiChange={setSelectedKhoiCV}
-            onMonthChange={setSelectedMonth}
-            onTopChange={setSelectedTop}
-            STATUS_OPTIONS={STATUS_OPTIONS}
-            months={months}
-            nhoms={nhoms}
-            tangGiam={tangGiam}
-            top={top}
-          />
-        </Grid>
-        <Grid xs={12} md={12} lg={6}>
-          <ChecklistsSuCo
-            title="Sự cố"
-            subheader="Số lượng sự cố chưa hoàn thành"
-            chart={{
-              categories: dataTotalYearSuco.categories,
-              series: dataTotalYearSuco.series,
-            }}
-            selectedYear={selectedYearSuco}
-            selectedKhoiCV={selectedKhoiCVSuco}
-            selectedTangGiam={selectedTangGiamSuco}
-            selectedTop={selectedTopSuco}
-            selectedNhom={selectedNhomSuco}
-            selectedMonth={selectedMonthSuco}
-            onYearChange={setSelectedYearSuco}
-            onTangGiamChange={setSelectedTangGiamSuco}
-            onKhoiChange={setSelectedKhoiCVSuco}
-            onNhomChange={setSelectedNhomSuco}
-            onTopChange={setSelectedTopSuco}
-            onMonthChange={setSelectedMonthSuco}
-            STATUS_OPTIONS={STATUS_OPTIONS}
-            months={months}
-            nhoms={nhoms}
-            tangGiam={tangGiam}
-            top={top}
-          />
-        </Grid>
-        <Grid xs={12} md={12} lg={12}>
-          <ChecklistsSuCoNgoai
-            title="Sự cố ngoài"
-            chart={{
-              categories: dataTotalYearSuCoNgoai.categories,
-              series: dataTotalYearSuCoNgoai.series,
-            }}
-            selectedYear={selectedYearSuCoNgoai}
-            selectedKhoiCV={selectedKhoiCVSuCoNgoai}
-            selectedTangGiam={selectedTangGiamSuCoNgoai}
-            onYearChange={setSelectedYearSuCoNgoai}
-            onTangGiamChange={setSelectedTangGiamSuCoNgoai}
-            onKhoiChange={setSelectedKhoiCVSuCoNgoai}
-            STATUS_OPTIONS={STATUS_OPTIONS}
-            tangGiam={tangGiam}
-          />
-        </Grid>
-
-        <Grid xs={12} md={12} lg={12}>
-          {dataTotalErrorWeek && (
-            <BankingRecentTransitions
-              title="Sự cố ngày hôm trước"
-              tableData={dataTotalErrorWeek}
-              tableLabels={[
-                { id: 'checklistName', label: 'Tên checklist' },
-                { id: 'Ngay', label: 'Ngày' },
-                { id: 'note', label: 'Ghi chú' },
-                { id: 'image', label: 'Ảnh' },
-                { id: 'duan', label: 'Dự án' },
-                { id: '' },
-              ]}
+          </Grid>
+          <Grid xs={12} md={12} lg={(selectedTop || selectedTopSuco) === '5' ? 6 : 12}>
+            <ChecklistsSuCo
+              title="Sự cố"
+              subheader="Số lượng sự cố chưa hoàn thành"
+              chart={{
+                categories: dataTotalYearSuco.categories,
+                series: dataTotalYearSuco.series,
+              }}
+              selectedYear={selectedYearSuco}
+              selectedKhoiCV={selectedKhoiCVSuco}
+              selectedTangGiam={selectedTangGiamSuco}
+              selectedTop={selectedTopSuco}
+              selectedNhom={selectedNhomSuco}
+              selectedMonth={selectedMonthSuco}
+              onYearChange={setSelectedYearSuco}
+              onTangGiamChange={setSelectedTangGiamSuco}
+              onKhoiChange={setSelectedKhoiCVSuco}
+              onNhomChange={setSelectedNhomSuco}
+              onTopChange={setSelectedTopSuco}
+              onMonthChange={setSelectedMonthSuco}
+              STATUS_OPTIONS={STATUS_OPTIONS}
+              months={months}
+              nhoms={nhoms}
+              tangGiam={tangGiam}
+              top={top}
+              //
             />
-          )}
+          </Grid>
+          <Grid xs={12} md={12} lg={12}>
+            <ChecklistsSuCoNgoai
+              title="Sự cố ngoài"
+              chart={{
+                categories: dataTotalYearSuCoNgoai.categories || [],
+                series: dataTotalYearSuCoNgoai.series,
+              }}
+              selectedYear={selectedYearSuCoNgoai}
+              selectedKhoiCV={selectedKhoiCVSuCoNgoai}
+              selectedTangGiam={selectedTangGiamSuCoNgoai}
+              onYearChange={setSelectedYearSuCoNgoai}
+              onTangGiamChange={setSelectedTangGiamSuCoNgoai}
+              onKhoiChange={setSelectedKhoiCVSuCoNgoai}
+              STATUS_OPTIONS={STATUS_OPTIONS}
+              tangGiam={tangGiam}
+              handleOpenModal={handleOpenModal}
+              handleCloseModal={handleCloseModal}
+            />
+          </Grid>
+
+          <Grid xs={12} md={12} lg={12}>
+            {dataTotalErrorWeek && (
+              <BankingRecentTransitions
+                title="Sự cố ngày hôm trước"
+                tableData={dataTotalErrorWeek}
+                tableLabels={[
+                  { id: 'checklistName', label: 'Tên checklist' },
+                  { id: 'Ngay', label: 'Ngày' },
+                  { id: 'note', label: 'Ghi chú' },
+                  { id: 'image', label: 'Ảnh' },
+                  { id: 'duan', label: 'Dự án' },
+                  { id: '' },
+                ]}
+              />
+            )}
+          </Grid>
         </Grid>
-      </Grid>
-    </Container>
+      </Container>
+
+      <Dialog open={openModal} onClose={handleCloseModal} fullWidth maxWidth="lg">
+        <DialogTitle>Dự án: {selectedCode}</DialogTitle>
+        <DialogContent>
+           {
+            dataTable && dataTable?.length > 0 && openModal === true &&
+            <SuCoListView data={dataTable}/>
+           }
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseModal}>Close</Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }

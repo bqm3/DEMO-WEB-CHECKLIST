@@ -126,7 +126,7 @@ export default function OrderTableToolbar({
             fullWidth
             value={filters.name}
             onChange={handleFilterName}
-            placeholder="Tìm kiếm theo checklist, mã qr code, giá trị nhận/ định danh, hạng mục..."
+            placeholder="Tìm kiếm theo checklist, mã qr code, hạng mục..."
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">

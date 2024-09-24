@@ -33,20 +33,11 @@ import moment from 'moment';
 type Props = {
   row: ISucongoai;
   selected: boolean;
-  onViewRow: VoidFunction;
   onSelectRow: VoidFunction;
-  onDeleteRow: VoidFunction;
   index: number;
 };
 
-export default function AreaTableRow({
-  row,
-  selected,
-  onViewRow,
-  onSelectRow,
-  onDeleteRow,
-  index,
-}: Props) {
+export default function AreaTableRow({ row, selected, onSelectRow, index }: Props) {
   const {
     ID_Suco,
     ID_KV_CV,
@@ -74,22 +65,12 @@ export default function AreaTableRow({
 
   const renderPrimary = (
     <TableRow hover selected={selected} style={{ backgroundColor: backgroundColorStyle }}>
-      <TableCell padding="checkbox">
+      {/* <TableCell padding="checkbox">
         <Checkbox checked={selected} onClick={onSelectRow} />
-      </TableCell>
+      </TableCell> */}
 
       <TableCell>
-        <Box
-          onClick={onViewRow}
-          sx={{
-            cursor: 'pointer',
-            '&:hover': {
-              textDecoration: 'underline',
-            },
-          }}
-        >
           SC{ID_Suco}
-        </Box>
       </TableCell>
       <TableCell>{ent_hangmuc?.Hangmuc}</TableCell>
       <TableCell>
@@ -103,7 +84,7 @@ export default function AreaTableRow({
           }}
         />{' '}
       </TableCell>
-      <TableCell> {moment(Ngayxuly).format('DD-MM-YYYY')} </TableCell>
+      <TableCell> {Ngayxuly ? moment(Ngayxuly).format('DD-MM-YYYY') :''} </TableCell>
       <TableCell> {Noidungsuco} </TableCell>
       <TableCell>
         <Label
@@ -120,56 +101,8 @@ export default function AreaTableRow({
           {`${Tinhtrangxuly}` === '2' && 'Đã xử lý'}
         </Label>
       </TableCell>
-
-      <TableCell>
-        <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
-          <Iconify icon="eva:more-vertical-fill" />
-        </IconButton>
-      </TableCell>
     </TableRow>
   );
 
-  return (
-    <>
-      {renderPrimary}
-      <CustomPopover
-        open={popover.open}
-        onClose={popover.onClose}
-        arrow="right-top"
-        sx={{ width: 140 }}
-      >
-        <MenuItem
-          onClick={() => {
-            onViewRow();
-            popover.onClose();
-          }}
-        >
-          <Iconify icon="solar:eye-bold" />
-          Cập nhật
-        </MenuItem>
-        {/* <MenuItem
-          onClick={() => {
-            confirm.onTrue();
-            popover.onClose();
-          }}
-          sx={{ color: 'error.main' }}
-        >
-          <Iconify icon="solar:trash-bin-trash-bold" />
-          Xóa
-        </MenuItem> */}
-      </CustomPopover>
-
-      <ConfirmDialog
-        open={confirm.value}
-        onClose={confirm.onFalse}
-        title="PMC thông báo"
-        content="Bạn có thực sự muốn xóa không?"
-        action={
-          <Button variant="contained" color="error" onClick={onDeleteRow}>
-            Xóa
-          </Button>
-        }
-      />
-    </>
-  );
+  return <>{renderPrimary}</>;
 }

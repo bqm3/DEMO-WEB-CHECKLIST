@@ -2,10 +2,15 @@ import { ApexOptions } from 'apexcharts';
 import { useState, useCallback } from 'react';
 // @mui
 import Box from '@mui/material/Box';
-import MenuItem from '@mui/material/MenuItem';
 import ButtonBase from '@mui/material/ButtonBase';
 import CardHeader from '@mui/material/CardHeader';
 import Card, { CardProps } from '@mui/material/Card';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
+import MenuItem from '@mui/material/MenuItem';
 // components
 import Iconify from 'src/components/iconify';
 import Chart, { useChart } from 'src/components/chart';
@@ -17,7 +22,7 @@ interface Props extends CardProps {
   title?: string;
   subheader?: string;
   chart: {
-    categories?: string[];
+    categories: string[];
     colors?: string[];
     series: {
       type: string;
@@ -45,6 +50,7 @@ interface Props extends CardProps {
   nhoms: any;
   tangGiam: any;
   top: any;
+
 }
 
 export default function ChecklistsSuco({
@@ -68,6 +74,7 @@ export default function ChecklistsSuco({
   top,
   selectedTop,
   onTopChange,
+
   ...other
 }: Props) {
   const { categories, colors, series, options } = chart;
@@ -81,7 +88,7 @@ export default function ChecklistsSuco({
   const topPopover = usePopover();
 
   const chartOptions = useChart({
-    colors: ['#f1c232'], // Màu mặc định là vàng
+    colors: ['#f1c232'], // Default yellow color
     stroke: {
       show: true,
       width: 0,
@@ -98,7 +105,7 @@ export default function ChecklistsSuco({
     dataLabels: {
       enabled: true,
       style: {
-        colors: ['#fff']
+        colors: ['#fff'],
       },
       formatter: (val: any) => val.toFixed(0),
     },
@@ -115,17 +122,17 @@ export default function ChecklistsSuco({
         colors: {
           ranges: [
             {
-              from: 10, // Nếu giá trị lớn hơn hoặc bằng 11
+              from: 10,
               to: Infinity,
-              color: '#FF0000', // Màu đỏ
+              color: '#FF0000', // Red for values greater than or equal to 11
             },
           ],
         },
       },
     },
-    ...options,
+   
+    ...options, // Merge any additional chart options
   });
-  
 
   const handleChangeSeries = useCallback(
     (newValue: string) => {
@@ -182,7 +189,7 @@ export default function ChecklistsSuco({
           title={title}
           subheader={subheader}
           action={
-            <Box sx={{ gap: 1, display: 'flex', flexGrow: 1, flexWrap: 'wrap', width: 300}}>
+            <Box sx={{ gap: 1, display: 'flex', flexGrow: 1, flexWrap: 'wrap', width: 300 }}>
               <ButtonBase
                 onClick={topPopover.onOpen} // Open the KhoiCV popover
                 sx={{
@@ -203,7 +210,7 @@ export default function ChecklistsSuco({
                   sx={{ ml: 0.5 }}
                 />
               </ButtonBase>
-               <ButtonBase
+              <ButtonBase
                 onClick={nhomPopover.onOpen} // Open the KhoiCV popover
                 sx={{
                   pl: 1,
@@ -238,7 +245,9 @@ export default function ChecklistsSuco({
                 <Iconify
                   width={16}
                   icon={
-                    tangGiamPopover.open ? 'eva:arrow-ios-upward-fill' : 'eva:arrow-ios-downward-fill'
+                    tangGiamPopover.open
+                      ? 'eva:arrow-ios-upward-fill'
+                      : 'eva:arrow-ios-downward-fill'
                   }
                   sx={{ ml: 0.5 }}
                 />
@@ -312,7 +321,7 @@ export default function ChecklistsSuco({
         {series.map((item) => (
           <Box key={item.type} sx={{ mt: 3, mx: 3 }}>
             {item.type === selectedYear && (
-              <Chart  dir="ltr" type="bar" series={item.data} options={chartOptions} height={364} />
+              <Chart dir="ltr" type="bar" series={item.data} options={chartOptions} height={364} />
             )}
           </Box>
         ))}
@@ -337,7 +346,11 @@ export default function ChecklistsSuco({
           </MenuItem>
         ))}
       </CustomPopover>
-      <CustomPopover open={tangGiamPopover.open} onClose={tangGiamPopover.onClose} sx={{ width: 140 }}>
+      <CustomPopover
+        open={tangGiamPopover.open}
+        onClose={tangGiamPopover.onClose}
+        sx={{ width: 140 }}
+      >
         {tangGiam?.map((item: any) => (
           <MenuItem
             selected={item.value === tangGiamPopover}
@@ -348,7 +361,12 @@ export default function ChecklistsSuco({
         ))}
       </CustomPopover>
       <CustomPopover open={yearPopover.open} onClose={yearPopover.onClose} sx={{ width: 140 }}>
-        <MenuItem selected={selectedYear === '2024'} onClick={() => handleChangeSeries('2024')}>
+        <MenuItem
+          selected={selectedYear === '2024'}
+          onClick={() => {
+            handleChangeSeries('2024');
+          }}
+        >
           2024
         </MenuItem>
         <MenuItem selected={selectedYear === '2025'} onClick={() => handleChangeSeries('2025')}>
@@ -365,7 +383,6 @@ export default function ChecklistsSuco({
           </MenuItem>
         ))}
       </CustomPopover>
-     
 
       <CustomPopover open={khoiPopover.open} onClose={khoiPopover.onClose} sx={{ width: 140 }}>
         {STATUS_OPTIONS?.map((item: any) => (

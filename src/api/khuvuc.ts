@@ -642,7 +642,7 @@ export function useGetTb_ChecklistDetail(id:any) {
 
 export function useGetChecklistWeb() {
   const accessToken = localStorage.getItem(STORAGE_KEY);
-  const URL = `https://checklist.pmcweb.vn/demo/api/ent_checklist/web`;
+  const URL = `https://checklist.pmcweb.vn/demo/api/ent_checklist/all`;
   const fetCher = (url: string) =>
     fetch(url, {
       method: 'get',

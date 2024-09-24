@@ -45,7 +45,14 @@ interface Props extends CardProps {
   nhoms: any;
   tangGiam: any;
   top: any;
+  setShowMax: any;
+  showMax: any
 }
+
+const SHOWS = [
+  { value: '6', label: '50%' },
+  { value: '12', label: '100%' },
+]
 
 export default function ChecklistsHoanThanh({
   title,
@@ -68,6 +75,8 @@ export default function ChecklistsHoanThanh({
   top,
   selectedTop,
   onTopChange,
+  setShowMax,
+  showMax,
   ...other
 }: Props) {
   const { categories, colors, series, options } = chart;
@@ -79,6 +88,7 @@ export default function ChecklistsHoanThanh({
   const nhomPopover = usePopover();
   const tangGiamPopover = usePopover();
   const topPopover = usePopover();
+  const showPopover = usePopover();
 
   const chartOptions = useChart({
     colors,
@@ -102,7 +112,7 @@ export default function ChecklistsHoanThanh({
       style: {
         colors: ['#fff']
       },
-      formatter: (val: any) => val.toFixed(0),
+      formatter: (val: any) => `${val.toFixed(0)}`,
     },
     xaxis: {
       categories,
@@ -175,6 +185,7 @@ export default function ChecklistsHoanThanh({
     },
     [topPopover, onTopChange]
   );
+
 
   return (
     <>
@@ -285,6 +296,7 @@ export default function ChecklistsHoanThanh({
                   sx={{ ml: 0.5 }}
                 />
               </ButtonBase>
+             
 
               <ButtonBase
                 onClick={khoiPopover.onOpen} // Open the KhoiCV popover
@@ -306,6 +318,8 @@ export default function ChecklistsHoanThanh({
                   sx={{ ml: 0.5 }}
                 />
               </ButtonBase>
+
+             
             </Box>
           }
         />
@@ -356,6 +370,9 @@ export default function ChecklistsHoanThanh({
           2025
         </MenuItem>
       </CustomPopover>
+
+    
+
       <CustomPopover open={monthPopover.open} onClose={monthPopover.onClose} sx={{ width: 140 }}>
         {months?.map((item: any) => (
           <MenuItem
@@ -366,8 +383,7 @@ export default function ChecklistsHoanThanh({
           </MenuItem>
         ))}
       </CustomPopover>
-     
-
+      
       <CustomPopover open={khoiPopover.open} onClose={khoiPopover.onClose} sx={{ width: 140 }}>
         {STATUS_OPTIONS?.map((item: any) => (
           <MenuItem
