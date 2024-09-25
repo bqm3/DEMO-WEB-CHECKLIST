@@ -109,7 +109,6 @@ export default function ChiaCaNewEditForm({ id }: Props) {
     }
   }, [khuvucCheck]);
 
-
   useEffect(() => {
     if (thietlapca && calv && KhoiCV) {
       const newCalv = calv?.filter((item: any) => `${item.ID_Calv}` === `${thietlapca?.ID_Calv}`);
@@ -121,8 +120,10 @@ export default function ChiaCaNewEditForm({ id }: Props) {
       setOptionKhoiCV(selectedKhoiCV[0]);
 
       const arrChuky = thietlapca.ent_duan.ent_duan_khoicv;
-      const chukyDetail = arrChuky.filter((item: any) => `${thietlapca?.ent_calv?.ID_KhoiCV}` === `${item.ID_KhoiCV}`)
-      setChukyData(chukyDetail[0].Chuky)
+      const chukyDetail = arrChuky.filter(
+        (item: any) => `${thietlapca?.ent_calv?.ID_KhoiCV}` === `${item.ID_KhoiCV}`
+      );
+      setChukyData(chukyDetail[0].Chuky);
     }
   }, [thietlapca, KhoiCV, calv]);
 
@@ -163,10 +164,12 @@ export default function ChiaCaNewEditForm({ id }: Props) {
         filteredAreas.map((kv) =>
           kv.ent_hangmuc.map((hm, index) => ({
             ID_Hangmuc: hm.ID_Hangmuc,
+            Important: `${hm.Important}` === '1', // Simplified
             Index: index,
-            // Kiểm tra nếu ID_Hangmuc có trong bất kỳ ent_hangmuc nào của khuvucCheck
-            checked: khuvucCheck.some((checkItem) =>
-              checkItem.ent_hangmuc.some((checkHm) => checkHm.ID_Hangmuc === hm.ID_Hangmuc)
+            checked: khuvucCheck.some(
+              (checkItem) =>
+                checkItem.ent_hangmuc.some((checkHm) => checkHm.ID_Hangmuc === hm.ID_Hangmuc) ||
+                `${hm.Important}` === '1'
             ),
           }))
         )
@@ -179,7 +182,10 @@ export default function ChiaCaNewEditForm({ id }: Props) {
 
     const updatedCheckedStates = checkedStates.map((buildingCheckedStates: any, index: any) =>
       `${index}` === `${buildingIndex}`
-        ? buildingCheckedStates?.map((data: any) => ({ ...data, checked: isChecked }))
+        ? buildingCheckedStates?.map((data: any) => ({
+            ...data,
+            checked: data.Important ? true : isChecked, // Prevent unchecking important items
+          }))
         : buildingCheckedStates
     );
 
@@ -293,6 +299,7 @@ export default function ChiaCaNewEditForm({ id }: Props) {
                           size="medium"
                           checked={areaCheckedStates[itemIndex]?.checked}
                           onChange={handleChildChange(areaIndex, itemIndex)}
+                          disabled={areaCheckedStates[itemIndex]?.Important} // Disable if Important is true
                         />
                       }
                     />

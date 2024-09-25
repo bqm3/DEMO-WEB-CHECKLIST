@@ -174,6 +174,45 @@ export const OverviewReportView = () => {
     setLoading(false);
   };
 
+  const handleExportAllArticleImportant = async () => {
+    setLoading(true);
+    const response = await axios.post(
+      `https://checklist.pmcweb.vn/demo/api/tb_checklistc/thong-ke-hang-muc-quan-trong`,
+      {
+        startDate: filters.startDate,
+        endDate: filters.endDate,
+        ID_KhoiCVs: filters.publish,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        responseType: 'blob',
+      }
+    );
+
+    const blob = new Blob([response.data], {
+      type: response.headers['content-type'],
+    });
+
+    // Create a link element
+    const link = document.createElement('a');
+
+    // Set the download attribute with a filename
+    link.href = window.URL.createObjectURL(blob);
+    link.download = 'Báo cáo tổng hợp Checklist ngăn ngừa rủi ro.xlsx';
+
+    // Append the link to the body
+    document.body.appendChild(link);
+
+    // Programmatically trigger a click on the link to download the file
+    link.click();
+
+    // Remove the link from the document
+    document.body.removeChild(link);
+    setLoading(false);
+  };
+
   const handleValidate = (data: string) => {
     // Common validation function
     const isMissingRequiredFields =
@@ -205,7 +244,13 @@ export const OverviewReportView = () => {
           handleExportStatistical();
         }
         break;
-
+      case '5':
+        if (isMissingRequiredFields) {
+          showError();
+        } else {
+          handleExportAllArticleImportant();
+        }
+        break;
       case '1':
       case '2':
         if (filters.startDate === null || filters.endDate === null) {

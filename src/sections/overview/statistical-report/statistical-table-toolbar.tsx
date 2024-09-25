@@ -108,7 +108,7 @@ export default function ProductTableToolbar({ filters, onFilters, publishOptions
           />
         </FormControl>
         {
-          (indexBaoCao === '3' || indexBaoCao === '4') &&
+          (indexBaoCao === '3' || indexBaoCao === '4' || indexBaoCao === '5' ) &&
           <FormControl
           sx={{
             flexShrink: 0,

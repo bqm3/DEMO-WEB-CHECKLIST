@@ -48,7 +48,7 @@ export default function AreaTableRow({
   khoiCV,
   index,
 }: Props) {
-  const { ID_Khuvuc, ID_Hangmuc, Hangmuc, Tieuchuankt, MaQrCode, ent_khuvuc } = row;
+  const { ID_Khuvuc, ID_Hangmuc, Hangmuc, Tieuchuankt, Important, MaQrCode, ent_khuvuc } = row;
 
   const confirm = useBoolean();
 
@@ -132,6 +132,15 @@ export default function AreaTableRow({
             color: 'text.disabled',
           }}
         />{' '}
+      </TableCell>
+      <TableCell>
+        {`${Important}` === '0' ? (
+          ''
+        ) : (
+          <Label variant="soft" color="info" >
+            Quan trọng
+          </Label>
+        )}
       </TableCell>
       <TableCell>{labels}</TableCell>
       <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>

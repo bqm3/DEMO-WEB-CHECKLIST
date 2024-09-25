@@ -89,6 +89,7 @@ export default function ArticleNewEditForm({ currentArticle }: Props) {
     Hangmuc: Yup.string().required('Phải có tên hạng mục'),
     ID_Toanha: Yup.string(),
     FileTieuChuan: Yup.string(),
+    Important: Yup.string(),
   });
 
   const defaultValues = useMemo(
@@ -96,6 +97,7 @@ export default function ArticleNewEditForm({ currentArticle }: Props) {
       Hangmuc: currentArticle?.Hangmuc || '',
       Tieuchuankt: currentArticle?.Tieuchuankt || '',
       MaQrCode: currentArticle?.MaQrCode || '',
+      Important: currentArticle?.Important || '0',
       FileTieuChuan: currentArticle?.FileTieuChuan || '',
       ID_Khuvuc: currentArticle?.ID_Khuvuc || null,
       ID_Toanha: currentArticle?.ent_khuvuc?.ID_Toanha || null || '',
@@ -240,6 +242,13 @@ export default function ArticleNewEditForm({ currentArticle }: Props) {
     }
   });
 
+  const handleChangeIncludeImportant = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setValue('Important', event.target.checked ? '1' : '0');
+    },
+    [setValue]
+  );
+
   const renderDetails = (
     <>
       {mdUp && (
@@ -306,13 +315,26 @@ export default function ArticleNewEditForm({ currentArticle }: Props) {
 
   const renderActions = (
     <>
-      {mdUp && <Grid md={4} />}
-      <Grid
-        xs={12}
-        md={8}
-        sx={{ display: 'flex', alignItems: 'flex-end', flexDirection: 'column-reverse' }}
-      >
-        <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
+      {mdUp && <Grid md={3} />}
+      <Grid xs={12} md={9} sx={{ display: 'flex', alignItems: 'center' }}>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={`${values.Important}` === '1'}
+              onChange={handleChangeIncludeImportant}
+            />
+          }
+          label="Quan trọng"
+          sx={{ flexGrow: 1 }}
+        />
+
+        <LoadingButton
+          type="submit"
+          variant="contained"
+          size="large"
+          loading={isSubmitting}
+          sx={{ ml: 2 }}
+        >
           {!currentArticle ? 'Tạo mới' : 'Lưu thay đổi'}
         </LoadingButton>
       </Grid>

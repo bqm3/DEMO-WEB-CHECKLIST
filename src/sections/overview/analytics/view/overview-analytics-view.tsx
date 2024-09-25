@@ -3,6 +3,7 @@ import { useTheme } from '@mui/material/styles';
 // @mui
 import Grid from '@mui/material/Unstable_Grid2';
 import Stack from '@mui/material/Stack';
+import { Box, TextField } from '@mui/material';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { LoadingButton } from '@mui/lab';
@@ -11,6 +12,7 @@ import { paths } from 'src/routes/paths';
 import { useAuthContext } from 'src/auth/hooks';
 import { useRouter } from 'src/routes/hooks';
 import { useBoolean } from 'src/hooks/use-boolean';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 // components
 import Iconify from 'src/components/iconify';
 // components
@@ -28,7 +30,6 @@ import ChecklistsHoanThanh from '../checklist-hoan-thanh';
 import ChecklistsSuCo from '../checklist-su-co';
 import ChecklistsSuCoNgoai from '../checklist-su-co-ngoai';
 
-import EcommerceSalesOverview from '../checklist-percent-overview';
 
 // ----------------------------------------------------------------------
 // ----------------------------------------------------------------------
@@ -43,6 +44,45 @@ type widgetData = {
   series: any | number;
   result: any | number;
 };
+
+const columns: GridColDef<[number]>[] = [
+  { field: 'id', headerName: 'Số thứ tự', width: 0 },
+  {
+    field: 'date',
+    headerName: 'Ngày',
+    width: 150,
+    editable: true,
+  },
+  {
+    field: 'Khối kỹ thuật',
+    headerName: 'Khối kỹ thuật',
+    width: 150,
+    editable: true,
+  },
+  {
+    field: 'Khối làm sạch',
+    headerName: 'Khối làm sạch',
+    // type: 'number',
+    width: 150,
+    editable: true,
+  },
+  {
+    field: 'Khối dịch vụ',
+    headerName: 'Khối dịch vụ',
+    width: 150,
+    editable: true,
+    // valueGetter: (value: any, row: any) => `${row?.firstName || ''} ${row?.lastName || ''}`,
+  },
+  {
+    field: 'Khối bảo vệ',
+    headerName: 'Khối bảo vệ',
+    // description: 'This column has a value getter and is not sortable.',
+    // sortable: false,
+    width: 160,
+    editable: true,
+    // valueGetter: (value: any, row: any) => `${row?.firstName || ''} ${row?.lastName || ''}`,
+  },
+];
 
 const STORAGE_KEY = 'accessToken';
 
@@ -83,6 +123,9 @@ export default function OverviewAnalyticsView() {
   const upload = useBoolean();
 
   const [loading, setLoading] = useState<Boolean | any>(false);
+  const [dataPercentDays, setDataPercentDays] = useState<any>([]);
+
+
 
   const [dataTotalKhoiCV, setDataTotalKhoiCV] = useState<SeriesData[]>([]);
   const [dataTotalKhuvuc, setDataTotalKhuvuc] = useState<SeriesData[]>([]);
@@ -131,6 +174,42 @@ export default function OverviewAnalyticsView() {
       router.push(paths.dashboard.general.management);
     }
   }, [user, router]);
+
+  useEffect(() => {
+    const handleDataPercent = async () => {
+      await axios
+        .get('https://checklist.pmcweb.vn/demo/api/tb_checklistc/percent-checklist-days', {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        .then((res) => {
+          const dataRes = res.data.data;
+          const transformedRows = dataRes.map((project: any, index: number) => ({
+            id: index+1,
+            date: project.date,
+            'Khối kỹ thuật': project.createdKhois['Khối kỹ thuật']?.completionRatio
+              ? `${project.createdKhois['Khối kỹ thuật']?.completionRatio} %`
+              : null,
+            'Khối làm sạch': project.createdKhois['Khối làm sạch']?.completionRatio
+              ? `${project.createdKhois['Khối làm sạch']?.completionRatio} %`
+              : null,
+            'Khối dịch vụ': project.createdKhois['Khối dịch vụ']?.completionRatio
+              ? `${project.createdKhois['Khối dịch vụ']?.completionRatio} %`
+              : null,
+            'Khối bảo vệ': project.createdKhois['Khối bảo vệ']?.completionRatio
+              ? `${project.createdKhois['Khối bảo vệ']?.completionRatio} %`
+              : null,
+          }));
+
+          setDataPercentDays(transformedRows);
+        })
+        .catch((err) => console.log('err', err));
+    };
+
+    handleDataPercent();
+  }, [accessToken]);
 
   useEffect(() => {
     const handleTotalKhoiCV = async () => {
@@ -376,6 +455,18 @@ export default function OverviewAnalyticsView() {
             />
           )}
         </Grid>
+
+        <Grid xs={12} md={12} lg={12}>
+            <Box sx={{ maxHeight: 400, width: '100%', my: 4 }}>
+              <Typography sx={{ pb: 1.5, fontWeight: '600', fontSize: 18 }}>
+                Tỉ lệ hoàn thành checklist các ngày
+              </Typography>
+              <DataGrid
+                rows={dataPercentDays}
+                columns={columns}
+              />
+            </Box>
+          </Grid>
 
         <Grid xs={12} md={12} lg={12}>
           <ChecklistsHoanThanh

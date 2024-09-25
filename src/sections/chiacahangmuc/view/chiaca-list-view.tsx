@@ -212,10 +212,7 @@ export default function ChiacaListView() {
               name: 'Dashboard',
               href: paths.dashboard.root,
             },
-            {
-              name: 'Tài khoản',
-              href: paths.dashboard.quanlygiamsat.root,
-            },
+           
             { name: 'Danh sách' },
           ]}
           sx={{

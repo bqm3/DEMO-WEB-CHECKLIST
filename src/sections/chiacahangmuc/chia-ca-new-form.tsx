@@ -133,14 +133,14 @@ export default function ChiaCaNewEditForm() {
       const filteredAreas = optionKhoiCV
         ? khuvuc.filter((kv) => kv.ID_KhoiCVs.includes(optionKhoiCV.ID_KhoiCV))
         : khuvuc;
-
       setAreasData(filteredAreas);
       setCheckedStates(
         filteredAreas.map((kv) =>
           kv.ent_hangmuc.map((hm, index) => ({
             ID_Hangmuc: hm.ID_Hangmuc,
-            Index: index,
-            checked: false,
+            Important: `${hm.Important}` === '1', // Simplified
+          Index: index,
+          checked: `${hm.Important}` === '1', // Simplified
           }))
         )
       );
@@ -155,8 +155,9 @@ export default function ChiaCaNewEditForm() {
         filteredAreas.map((kv) =>
           kv.ent_hangmuc.map((hm, index) => ({
             ID_Hangmuc: hm.ID_Hangmuc,
+            Important: `${hm.Important}` === '1', // Simplified
             Index: index,
-            checked: false,
+            checked: `${hm.Important}` === '1', // Simplified
           }))
         )
       );
@@ -165,15 +166,19 @@ export default function ChiaCaNewEditForm() {
 
   const handleParentChange = (buildingIndex: any) => (event: any) => {
     const isChecked = event.target.checked;
-
+  
     const updatedCheckedStates = checkedStates.map((buildingCheckedStates: any, index: any) =>
       `${index}` === `${buildingIndex}`
-        ? buildingCheckedStates?.map((data: any) => ({ ...data, checked: isChecked }))
+        ? buildingCheckedStates?.map((data: any) => ({
+            ...data,
+            checked: data.Important ? true : isChecked, // Prevent unchecking important items
+          }))
         : buildingCheckedStates
     );
-
+  
     setCheckedStates(updatedCheckedStates);
   };
+  
 
   // Handle change for individual child checkboxes
   const handleChildChange = (buildingIndex: any, areaIndex: any) => (event: any) => {
@@ -281,17 +286,19 @@ export default function ChiaCaNewEditForm() {
                 />
                 <div>
                   {area.ent_hangmuc.map((item, itemIndex) => (
-                    <FormControlLabel
-                      key={item.ID_Hangmuc}
-                      label={`${item.Hangmuc}`}
-                      control={
-                        <Checkbox
-                          size="medium"
-                          checked={areaCheckedStates[itemIndex]?.checked}
-                          onChange={handleChildChange(areaIndex, itemIndex)}
-                        />
-                      }
-                    />
+                   <FormControlLabel
+                   key={item.ID_Hangmuc}
+                   label={`${item.Hangmuc}`}
+                   control={
+                     <Checkbox
+                       size="medium"
+                       checked={areaCheckedStates[itemIndex]?.checked}
+                       onChange={handleChildChange(areaIndex, itemIndex)}
+                       disabled={areaCheckedStates[itemIndex]?.Important} // Disable if Important is true
+                     />
+                   }
+                 />
+                 
                   ))}
                 </div>
               </Stack>

@@ -30,7 +30,7 @@ export default function GiamsatEditView({ id }: Props) {
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
       <CustomBreadcrumbs
-        heading="Thiết lập khu vực checklist cho tài khoản"
+        heading="Thiết lập khu vực checklist cho ca làm việc"
         links={[
           { name: '', href: paths.dashboard.root },
          

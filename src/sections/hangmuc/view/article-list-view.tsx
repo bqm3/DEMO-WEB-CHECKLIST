@@ -65,6 +65,7 @@ const TABLE_HEAD = [
   { id: 'Hangmuc', label: 'Tên hạng mục' },
   { id: 'MaQrCode', label: 'Mã Qr Code', width: 150 },
   { id: 'ID_Khuvuc', label: 'Khu vực', width: 200 },
+  { id: 'Important', label: 'Quan trọng', width: 100 },
   { id: 'ID_KhoiCV', label: 'Khối công việc', width: 250,  },
   { id: '', width: 88 },
 ];

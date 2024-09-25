@@ -256,6 +256,7 @@ export type IHangMuc = {
   MaQrCode: string;
   Hangmuc: string;
   FileTieuChuan: string;
+  Important: string;
   Tieuchuankt: string;
   isDelete: string;
   ent_khuvuc: IKhuvuc;
